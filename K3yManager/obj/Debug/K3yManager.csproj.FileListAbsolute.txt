@@ -1,0 +1,17 @@
+G:\code\windows\K3yManager\K3yManager\bin\Debug\K3yManager.exe.config
+G:\code\windows\K3yManager\K3yManager\bin\Debug\K3yManager.exe
+G:\code\windows\K3yManager\K3yManager\bin\Debug\K3yManager.pdb
+G:\code\windows\K3yManager\K3yManager\obj\Debug\K3yManager.csprojResolveAssemblyReference.cache
+G:\code\windows\K3yManager\K3yManager\obj\Debug\MainWindow.baml
+G:\code\windows\K3yManager\K3yManager\obj\Debug\MainWindow.g.cs
+G:\code\windows\K3yManager\K3yManager\obj\Debug\App.g.cs
+G:\code\windows\K3yManager\K3yManager\obj\Debug\K3yManager_MarkupCompile.cache
+G:\code\windows\K3yManager\K3yManager\obj\Debug\K3yManager.g.resources
+G:\code\windows\K3yManager\K3yManager\obj\Debug\K3yManager.Properties.Resources.resources
+G:\code\windows\K3yManager\K3yManager\obj\Debug\K3yManager.csproj.GenerateResource.Cache
+G:\code\windows\K3yManager\K3yManager\obj\Debug\K3yManager.exe
+G:\code\windows\K3yManager\K3yManager\obj\Debug\K3yManager.pdb
+G:\code\windows\K3yManager\K3yManager\obj\Debug\RegisterUI.baml
+G:\code\windows\K3yManager\K3yManager\obj\Debug\RegisterUI.g.cs
+G:\code\windows\K3yManager\K3yManager\obj\Debug\Main.baml
+G:\code\windows\K3yManager\K3yManager\obj\Debug\Main.g.cs

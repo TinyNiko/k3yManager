@@ -8,24 +8,26 @@
             <SolidColorBrush Color="#FF99B4D1"/>
         </TabControl.Background>
         <TabItem Header="k3yManager">
-            <Grid Background="#BFFF0000" >
+            <Grid Background="#BFFF0000"  >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="58*"/>
                     <ColumnDefinition Width="235*"/>
                 </Grid.ColumnDefinitions>
-                <Button Name="add" Content="add key" HorizontalAlignment="Left" Margin="45,236,0,0" VerticalAlignment="Top" Width="75" Grid.ColumnSpan="2"/>
-                <Button Name="query" Content="query" HorizontalAlignment="Left" Margin="46,236,0,0" VerticalAlignment="Top" Width="75" Grid.Column="1"/>
-                <Button Name="delete" Content="delete" HorizontalAlignment="Left" Margin="174,236,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.027,0.684" Grid.Column="1"/>
-                <TextBox HorizontalAlignment="Left" Height="23" Margin="96,22,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.Column="1"/>
-                <TextBox HorizontalAlignment="Left" Height="23" Margin="96,76,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120" Grid.Column="1"/>
+                <Button Name="add" Click="add_Click" Content="add key" HorizontalAlignment="Left" Margin="45,236,0,0" VerticalAlignment="Top" Width="75" Grid.ColumnSpan="2"/>
+                <Button Name="Query" Click="query_Click" Content="query" HorizontalAlignment="Left" Margin="46,236,0,0" VerticalAlignment="Top" Width="75" Grid.Column="1"/>
+                <Button Name="delete" Click="delete_Click" Content="delete" HorizontalAlignment="Left" Margin="174,236,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.027,0.684" Grid.Column="1"/>
+                <TextBox Name="TAG" HorizontalAlignment="Left" Height="23" Margin="96,22,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.Column="1"/>
+                <TextBox Name="COUNT" HorizontalAlignment="Left" Height="23" Margin="96,65,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120" Grid.Column="1"/>
                 <Button Name="weather" Content="Weather" HorizontalAlignment="Left" Margin="339,236,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.587,4.895" Grid.Column="1"/>
                 <Calendar HorizontalAlignment="Left" Margin="270,26,0,0" VerticalAlignment="Top" Grid.Column="1"/>
-                <TextBox HorizontalAlignment="Left" Height="23" Margin="96,126,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120" Grid.Column="1"/>
-                <ComboBox HorizontalAlignment="Left" Margin="96,187,0,0" VerticalAlignment="Top" Width="120" Grid.Column="1"/>
+                <TextBox Name="KEY" HorizontalAlignment="Left" Height="23" Margin="96,117,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120" Grid.Column="1"/>
+                <ComboBox Name="COMBOBOX" HorizontalAlignment="Left" Margin="96,199,0,0" VerticalAlignment="Top" Width="120" Grid.Column="1"/>
                 <Label Content="TAG" HorizontalAlignment="Left" Margin="99,22,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-                <Label Content="COUNT" HorizontalAlignment="Left" Margin="99,76,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-                <Label Content="KEY" HorizontalAlignment="Left" Margin="99,126,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-                <Label Content="SUBJECT" HorizontalAlignment="Left" Margin="99,187,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                <Label Content="COUNT" HorizontalAlignment="Left" Margin="99,65,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                <Label Content="KEY" HorizontalAlignment="Left" Margin="99,115,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                <Label Content="SUBJECT" HorizontalAlignment="Left" Margin="99,195,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                <Label Content="SECKEY(6nums)" HorizontalAlignment="Left" Margin="99,156,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="108" RenderTransformOrigin="0.174,0.48"/>
+                <TextBox Name="SEC" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="96,158,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120" MaxLength="6"/>
             </Grid>
         </TabItem>
         <TabItem Header="ENCRYPT">
@@ -59,10 +61,16 @@
         </TabItem>
         <TabItem Header="Tools">
             <Grid>
-                <TextBlock  TextWrapping="Wrap" Background="gray" HorizontalAlignment="Left" Width="382" />
                 <Button Name="change" Content="change" HorizontalAlignment="Left" Margin="466,23,0,0" VerticalAlignment="Top" Width="75"/>
                 <ComboBox HorizontalAlignment="Left" Margin="444,58,0,0" VerticalAlignment="Top" Width="120"/>
                 <Label Content="Way" HorizontalAlignment="Left" Margin="387,58,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.025,0.48"/>
+                <RichTextBox HorizontalAlignment="Left" Height="292" VerticalAlignment="Top" Width="359">
+                    <FlowDocument>
+                        <Paragraph>
+                            <Run />
+                        </Paragraph>
+                    </FlowDocument>
+                </RichTextBox>
 
             </Grid>
         </TabItem>

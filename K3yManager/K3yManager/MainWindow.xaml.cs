@@ -22,7 +22,7 @@ namespace K3yManager
     public partial class MainWindow : Window
     {
         [System.Flags]
-        enum ERROR:int
+        enum ERROR
         {
             CHOOSER_ERROR , PASSWD_EMPTY , PASSWD_WRONG ,FILE_MISSING 
         }
@@ -63,7 +63,7 @@ namespace K3yManager
             int i = checkall(usernum , passwdnum) ; 
             if(i == 0)
             {
-                Main main = new Main();
+                Main main = new Main(usernum);
                 main.Show();
                 this.Close(); 
             }
@@ -86,8 +86,9 @@ namespace K3yManager
             {
                 xmlDoc.Load("hehe.xml");
             }
-            catch(Exception e)
+            catch(Exception)
             {
+                
                 return (int)ERROR.FILE_MISSING ; 
          
             }

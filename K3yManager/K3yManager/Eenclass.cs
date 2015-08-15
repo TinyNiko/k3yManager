@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace K3yManager
 {
@@ -75,8 +76,25 @@ namespace K3yManager
             cs.FlushFinalBlock();
             ms.Seek(0, SeekOrigin.Begin); 
             return ms.ToArray();  
-            
-         
+                   
+        }
+        public byte[] aesenc(byte[] src , byte[] key)
+        {
+            byte[] newkey = checkaeskey(key);
+            byte[] mInitializationVector = { 0x01, 0x34, 0x56, 0x78, 0x90, 0xAB, 0xf7, 0xEF, 
+                                             0x12, 0x23, 0x66, 0x54 , 0x99, 0xA2, 0xB3,0xCE};
+            AesCryptoServiceProvider myaes = new AesCryptoServiceProvider();
+            MemoryStream ms = new MemoryStream();
+            myaes.Mode = CipherMode.CFB;
+            myaes.Key = newkey;
+            myaes.IV = mInitializationVector;
+            ICryptoTransform trans = myaes.CreateEncryptor();
+            CryptoStream cs = new CryptoStream(ms, trans, CryptoStreamMode.Write);
+            cs.Write(src, 0, src.Length);
+            cs.FlushFinalBlock();
+            ms.Seek(0, SeekOrigin.Begin);
+            return ms.ToArray();
+
         }
 
         public byte[] desenc()
@@ -98,6 +116,24 @@ namespace K3yManager
             return ms.ToArray();
         }
 
+        public byte[] desenc(byte[] src, byte[] key)
+        {
+            byte[] newkey = checkdeskey(key);
+            byte[] mInitializationVector = { 0x01, 0x34, 0x56, 0x78, 0x90, 0xAB, 0xf7, 0xEF };
+            DES mydes = new DESCryptoServiceProvider();
+            MemoryStream ms = new MemoryStream();
+            mydes.Mode = CipherMode.CFB;
+            mydes.Key = newkey;
+            mydes.IV = mInitializationVector;
+            ICryptoTransform encryptor = mydes.CreateEncryptor();
+            CryptoStream cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write);
+            cs.Write(src, 0, src.Length);
+            cs.FlushFinalBlock();
+            ms.Seek(0, SeekOrigin.Begin);
+            // byte[] byteenc = new byte[512] ; 
+            //ms.Read(byteenc,0, 512) ;
+            return ms.ToArray();
+        }
       
 
         private byte[] checkdeskey(byte[] key)
@@ -113,5 +149,20 @@ namespace K3yManager
         }
 
           
+        public byte[] rsaenc()
+        {
+            byte[] result = null  ;
+            return result ; 
+        }
+
+        public byte[] rsaenc(byte[] src , byte[] key)
+        {
+            RSA rsa = new RSACryptoServiceProvider();
+            MemoryStream ms = new MemoryStream();
+            byte[] result = null;
+            return result; 
+        }
+
+
     }
 }

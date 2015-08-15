@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ALLUSER>
+  <USER Name="F2F001F08F0D79495604E6863978D5650A6F262DBA4F2673">
+    <TAG tag="qq">
+      <user>123</user>
+      <pass>1234</pass>
+    </TAG>
+    <TAG tag="cc">
+      <user>12312</user>
+      <pass>qweqweq</pass>
+    </TAG>
+    <TAG tag="dd">
+      <user>12312</user>
+      <pass>123123</pass>
+    </TAG>
+  </USER>
+</ALLUSER>

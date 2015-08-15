@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,23 +10,137 @@ namespace K3yManager
 {
     class Decry
     {
-       private string m_src;
-       private string m_key; 
-       public  Decry(string str ,string key)
+       private byte[] m_src;
+       private byte[] m_key; 
+       public  Decry(byte[] str ,byte[] key)
        {
             m_src = str;
             m_key = key;
        }
 
-       
-       public string decaes()
+       public Decry()
        {
-           return "niko"; 
+
        }
 
-       public string decdes()
+       public byte[] decaes(byte[] src, byte[] key)
        {
-           return "caf3";
+           byte[] newkey = checkaeskey(key);
+           byte[] mInitializationVector = { 0x01, 0x34, 0x56, 0x78, 0x90, 0xAB, 0xf7, 0xEF, 
+                                             0x12, 0x23, 0x66, 0x54 , 0x99, 0xA2, 0xB3,0xCE};
+           AesCryptoServiceProvider myaes = new AesCryptoServiceProvider();
+           MemoryStream ms = new MemoryStream();
+           myaes.Mode = CipherMode.CFB;
+           myaes.Key = newkey;
+           myaes.IV = mInitializationVector;
+           ICryptoTransform trans = myaes.CreateDecryptor();
+           CryptoStream cs = new CryptoStream(ms, trans, CryptoStreamMode.Write);
+           cs.Write(src, 0, src.Length);
+           cs.FlushFinalBlock();
+           ms.Seek(0, SeekOrigin.Begin);
+           return ms.ToArray();
+
        }
+       
+       public byte[] decaes()
+       {
+            byte[] newkey = checkaeskey(m_key); 
+            byte[] mInitializationVector = { 0x01, 0x34, 0x56, 0x78, 0x90, 0xAB, 0xf7, 0xEF, 
+                                             0x12, 0x23, 0x66, 0x54 , 0x99, 0xA2, 0xB3,0xCE};
+            AesCryptoServiceProvider myaes = new AesCryptoServiceProvider();
+            MemoryStream ms = new MemoryStream();
+            myaes.Mode = CipherMode.CFB;
+            myaes.Key = newkey;
+            myaes.IV = mInitializationVector; 
+            ICryptoTransform trans = myaes.CreateDecryptor() ; 
+            CryptoStream cs = new CryptoStream(ms, trans, CryptoStreamMode.Write);
+            cs.Write(m_src, 0, m_src.Length);
+            cs.FlushFinalBlock();
+            ms.Seek(0, SeekOrigin.Begin); 
+            return ms.ToArray();  
+       }
+
+       
+       public string hex2str(byte[] src)
+       {
+            string str = BitConverter.ToString(src).Replace("-", string.Empty);
+            
+            return str;
+       }
+       public byte[] str2hex(string str)
+       {
+           byte[] vBytes = new byte[str.Length / 2];
+           for (int i = 0; i < str.Length; i += 2)
+               if (!byte.TryParse(str.Substring(i, 2), System.Globalization.NumberStyles.HexNumber,
+                   null, out vBytes[i / 2]))
+               {
+                   vBytes[i / 2] = 0;
+               }
+           return vBytes;
+       }
+
+        private byte[] checkaeskey(byte[] key)
+        {
+            byte[] newkey = new byte[16];
+            key.CopyTo(newkey, 0);
+            for (int i = key.Length; i < 16; i++)
+            {
+                newkey[i] = 0x61;
+            }
+
+            return newkey;
+        }
+
+       public byte[] decdes()
+       {
+            byte[] newkey = checkdeskey(m_key);
+            byte[] mInitializationVector = { 0x01, 0x34, 0x56, 0x78, 0x90, 0xAB, 0xf7, 0xEF };
+            DES mydes = new DESCryptoServiceProvider();
+            MemoryStream ms = new MemoryStream();
+            mydes.Mode = CipherMode.CFB;
+            mydes.Key = newkey;
+            mydes.IV = mInitializationVector;
+            ICryptoTransform encryptor = mydes.CreateDecryptor();
+            CryptoStream cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write);
+            cs.Write(m_src, 0, m_src.Length);
+            cs.FlushFinalBlock();
+            ms.Seek(0, SeekOrigin.Begin); 
+           // byte[] byteenc = new byte[512] ; 
+            //ms.Read(byteenc,0, 512) ;
+            return ms.ToArray();
+       }
+         public byte[] decdes(byte[] src, byte[] key)
+        {
+            byte[] newkey = checkdeskey(key);
+            byte[] mInitializationVector = { 0x01, 0x34, 0x56, 0x78, 0x90, 0xAB, 0xf7, 0xEF };
+            DES mydes = new DESCryptoServiceProvider();
+            MemoryStream ms = new MemoryStream();
+            mydes.Mode = CipherMode.CFB;
+            mydes.Key = newkey;
+            mydes.IV = mInitializationVector;
+            ICryptoTransform encryptor = mydes.CreateDecryptor();
+            CryptoStream cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write);
+            cs.Write(src, 0, src.Length);
+            cs.FlushFinalBlock();
+            ms.Seek(0, SeekOrigin.Begin);
+            // byte[] byteenc = new byte[512] ; 
+            //ms.Read(byteenc,0, 512) ;
+            return ms.ToArray();
+        }
+
+
+         private byte[] checkdeskey(byte[] key)
+         {
+             byte[] newkey = new byte[8];
+             key.CopyTo(newkey, 0);
+             for (int i = key.Length; i < 8; i++)
+             {
+                 newkey[i] = 0x61;
+             }
+
+             return newkey;
+         }
+
+
     }
 }

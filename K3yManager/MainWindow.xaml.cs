@@ -13,6 +13,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml;
+using System.Configuration;
+
+
+
+
 
 namespace K3yManager
 {
@@ -21,8 +26,8 @@ namespace K3yManager
     /// </summary>
     public partial class MainWindow : Window
     {
-        [System.Flags]
-        enum ERROR:int
+        
+        enum ERROR
         {
             CHOOSER_ERROR , PASSWD_EMPTY , PASSWD_WRONG ,FILE_MISSING 
         }
@@ -33,9 +38,25 @@ namespace K3yManager
                                  "can't find  file!!\nPlease register"}; 
         public MainWindow()
         {
+           
             InitializeComponent();
+            checkconfig(); 
         }
 
+        private void checkconfig()
+        {
+            MyConfig con = new MyConfig(); 
+            if(con.GetValue("islogin").Equals("false") )
+            {
+                return ;             
+            }
+            else
+            {
+                Main main = new Main();
+                main.Show();
+                this.Close(); 
+            }
+        }
         private void HELP_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show(error[0],"HELP" ,MessageBoxButton.OK); 
@@ -63,7 +84,7 @@ namespace K3yManager
             int i = checkall(usernum , passwdnum) ; 
             if(i == 0)
             {
-                Main main = new Main();
+                Main main = new Main(usernum);
                 main.Show();
                 this.Close(); 
             }
@@ -86,8 +107,9 @@ namespace K3yManager
             {
                 xmlDoc.Load("hehe.xml");
             }
-            catch(Exception e)
+            catch(Exception)
             {
+                
                 return (int)ERROR.FILE_MISSING ; 
          
             }

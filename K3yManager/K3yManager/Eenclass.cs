@@ -78,6 +78,17 @@ namespace K3yManager
             return ms.ToArray();  
                    
         }
+        public byte[] str2hex(string str)
+        {
+            byte[] vBytes = new byte[str.Length / 2];
+            for (int i = 0; i < str.Length; i += 2)
+                if (!byte.TryParse(str.Substring(i, 2), System.Globalization.NumberStyles.HexNumber,
+                    null, out vBytes[i / 2]))
+                {
+                    vBytes[i / 2] = 0;
+                }
+            return vBytes;
+        }
         public byte[] aesenc(byte[] src , byte[] key)
         {
             byte[] newkey = checkaeskey(key);

@@ -13,6 +13,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml;
+using System.Configuration;
+
+
+
+
 
 namespace K3yManager
 {
@@ -21,7 +26,7 @@ namespace K3yManager
     /// </summary>
     public partial class MainWindow : Window
     {
-        [System.Flags]
+        
         enum ERROR
         {
             CHOOSER_ERROR , PASSWD_EMPTY , PASSWD_WRONG ,FILE_MISSING 
@@ -33,9 +38,32 @@ namespace K3yManager
                                  "can't find  file!!\nPlease register"}; 
         public MainWindow()
         {
+           
             InitializeComponent();
+            checkconfig(); 
         }
 
+        private void checkconfig()
+        {
+            MyConfig con = new MyConfig();
+            if (con.GetValue("auto").Equals("false"))
+            {
+                if (con.GetValue("savepass").Equals("True"))
+                {
+                    user.Text = con.GetValue("username"); 
+                    
+                }
+                return;
+            }
+            else
+            {
+                Main main = new Main();
+                main.Show();
+                this.Close();
+            }
+      
+          
+        }
         private void HELP_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show(error[0],"HELP" ,MessageBoxButton.OK); 
@@ -49,22 +77,40 @@ namespace K3yManager
 
         private void LOGIN_Click(object sender, RoutedEventArgs e)
         {
+
             if(user.Text == "" || pwd.Text == "" )
             {
                 MessageBox.Show(error[1], "Waring", MessageBoxButton.OK,MessageBoxImage.Warning);
             }
-            
+
             // use MD5 and DES encrypt  user 
             // use SHA and AES encrypt passwd  
             // and check local user if not online check 
             //TODO
+            String passwdnum; 
             String usernum = makeuser(user.Text ,pwd.Text);
-            String passwdnum = makepwd(pwd.Text); 
+            MyConfig con = new MyConfig();
+            if (con.GetValue("savepass").Equals("True"))
+            {
+                passwdnum = getPasswdString(usernum); 
+
+            }
+            else
+            {
+              passwdnum = makepwd(pwd.Text);
+            }
+               
+            
             int i = checkall(usernum , passwdnum) ; 
             if(i == 0)
             {
+
                 Main main = new Main(usernum);
                 main.Show();
+                String issave = saveall.IsChecked==true?"True" : "False";
+                con.SetValue("savepass", issave);
+                string isauto = checkauto.IsChecked == true ? "True" : "False";
+                con.SetValue("auto", isauto); 
                 this.Close(); 
             }
             else if(i ==(int)ERROR.FILE_MISSING)
@@ -83,7 +129,11 @@ namespace K3yManager
         {
             XmlDocument xmlDoc = new XmlDocument();
             try
-            {
+            { 
+              //   MyConfig 
+              //   FileInfo fi = new FileInfo("hehe.xml");
+              //   fi.LastWriteTime compare 
+       
                 xmlDoc.Load("hehe.xml");
             }
             catch(Exception)
@@ -142,5 +192,45 @@ namespace K3yManager
             return result; 
             
         }
+
+        private string getPasswdString(string usernum)
+        {
+            string result=null; 
+            XmlDocument xmlDoc = new XmlDocument();
+            try
+            {
+                //   MyConfig 
+                //   FileInfo fi = new FileInfo("hehe.xml");
+                //   fi.LastWriteTime compare 
+
+                xmlDoc.Load("hehe.xml");
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Can't find hehe.xml "); 
+                return null;
+
+            }
+
+            XmlNode root = xmlDoc.SelectSingleNode("ALLUSER");
+            // lookup the id 
+            XmlNodeList nodeList = xmlDoc.SelectSingleNode("ALLUSER").ChildNodes;
+            foreach (XmlNode xn in nodeList)
+            {
+                XmlElement xe = (XmlElement)xn;
+                XmlNode usernode = xe.ChildNodes[0];
+                XmlNode passnode = xe.ChildNodes[1];
+                XmlElement subuse = (XmlElement)usernode;
+                XmlElement subpass = (XmlElement)passnode;
+                if (subuse.InnerText.Equals(usernum))
+                {
+                   
+                    result = subpass.InnerText;
+                }
+            }
+
+            return result; 
+        }
+
     }
 }

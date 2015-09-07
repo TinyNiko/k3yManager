@@ -18,6 +18,29 @@ namespace K3yManager
             m_key = key;
        }
 
+       public Decry()
+       {
+
+       }
+
+       public byte[] decaes(byte[] src, byte[] key)
+       {
+           byte[] newkey = checkaeskey(key);
+           byte[] mInitializationVector = { 0x01, 0x34, 0x56, 0x78, 0x90, 0xAB, 0xf7, 0xEF, 
+                                             0x12, 0x23, 0x66, 0x54 , 0x99, 0xA2, 0xB3,0xCE};
+           AesCryptoServiceProvider myaes = new AesCryptoServiceProvider();
+           MemoryStream ms = new MemoryStream();
+           myaes.Mode = CipherMode.CFB;
+           myaes.Key = newkey;
+           myaes.IV = mInitializationVector;
+           ICryptoTransform trans = myaes.CreateDecryptor();
+           CryptoStream cs = new CryptoStream(ms, trans, CryptoStreamMode.Write);
+           cs.Write(src, 0, src.Length);
+           cs.FlushFinalBlock();
+           ms.Seek(0, SeekOrigin.Begin);
+           return ms.ToArray();
+
+       }
        
        public byte[] decaes()
        {
@@ -36,12 +59,26 @@ namespace K3yManager
             ms.Seek(0, SeekOrigin.Begin); 
             return ms.ToArray();  
        }
+
+       
        public string hex2str(byte[] src)
        {
             string str = BitConverter.ToString(src).Replace("-", string.Empty);
-
+            
             return str;
        }
+       public byte[] str2hex(string str)
+       {
+           byte[] vBytes = new byte[str.Length / 2];
+           for (int i = 0; i < str.Length; i += 2)
+               if (!byte.TryParse(str.Substring(i, 2), System.Globalization.NumberStyles.HexNumber,
+                   null, out vBytes[i / 2]))
+               {
+                   vBytes[i / 2] = 0;
+               }
+           return vBytes;
+       }
+
         private byte[] checkaeskey(byte[] key)
         {
             byte[] newkey = new byte[16];
@@ -72,7 +109,7 @@ namespace K3yManager
             //ms.Read(byteenc,0, 512) ;
             return ms.ToArray();
        }
-         public byte[] desenc(byte[] src, byte[] key)
+         public byte[] decdes(byte[] src, byte[] key)
         {
             byte[] newkey = checkdeskey(key);
             byte[] mInitializationVector = { 0x01, 0x34, 0x56, 0x78, 0x90, 0xAB, 0xf7, 0xEF };

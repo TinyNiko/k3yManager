@@ -301,6 +301,7 @@ namespace K3yManager
             {
                 return (int)ERROR.PASSWD_WRONG; 
             }
+
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.Load("message.xml");
             XmlNode root = xmlDoc.SelectSingleNode("ALLUSER");
@@ -348,18 +349,16 @@ namespace K3yManager
             {
                 MyConfig con = new MyConfig();
                 con.SetValue("username", "");
-                con.SetValue("islogin", "false");
-                con.SetValue("querytimes", "0");
-                this.Close();
-
-                MainWindow xx = new MainWindow();
+                con.SetValue("islogin", "False");
+                MainWindow xx = new MainWindow(true);
                 xx.Show();
-                
+                this.Close(); 
+
             }
             catch(Exception)
             { }
         }
-            
+        
         private void Do_Click(object sender, RoutedEventArgs e)
         {
             bool over = checkover.IsChecked == true ? true : false; 
@@ -404,7 +403,7 @@ namespace K3yManager
             try
             {
                 //TODO
-                int i = 0;
+                
                 int size = 4096; 
                 long current=0 , first; 
                 int count = 0; 

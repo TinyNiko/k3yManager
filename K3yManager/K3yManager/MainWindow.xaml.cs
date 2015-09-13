@@ -14,10 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml;
 using System.Configuration;
-
-
-
-
+using System.IO;
 
 namespace K3yManager
 {
@@ -31,38 +28,64 @@ namespace K3yManager
         {
             CHOOSER_ERROR , PASSWD_EMPTY , PASSWD_WRONG ,FILE_MISSING 
         }
-       
+        private bool back; 
         public string[] error = {"FIRST REGISTER\nTHEN YOU CAN LOGIN!!\n" ,
                                  "user and passwd can't be empty!!!",
                                  "user or passwd is wrong" ,
                                  "can't find  file!!\nPlease register"}; 
         public MainWindow()
         {
-           
+                      
             InitializeComponent();
             checkconfig(); 
+        }
+        public MainWindow(bool back)
+        {
+            this.back = back;
+            InitializeComponent();
+            checkconfig2(); 
         }
 
         private void checkconfig()
         {
             MyConfig con = new MyConfig();
-            if (con.GetValue("auto").Equals("false"))
+
+            if (con.GetValue("islogin").Equals("False"))
             {
-                if (con.GetValue("savepass").Equals("True"))
+                if (con.GetValue("auto").Equals("false"))
                 {
-                    user.Text = con.GetValue("username"); 
-                    
+                    if (con.GetValue("savepass").Equals("True"))
+                    {
+                        user.Text = con.GetValue("username");
+
+                    }
+                    return;
                 }
-                return;
+                else
+                {
+                    Main main = new Main();
+                    main.Show();
+                    this.Close();
+                }
+
             }
-            else
+        }
+        private void checkconfig2()
+        {
+            MyConfig con = new MyConfig();
+
+            if (con.GetValue("islogin").Equals("False"))
             {
-                Main main = new Main();
-                main.Show();
-                this.Close();
+                if (con.GetValue("auto").Equals("false"))
+                {
+                    if (con.GetValue("savepass").Equals("True"))
+                    {
+                        user.Text = con.GetValue("username");
+
+                    }
+                    return;
+                }
             }
-      
-          
         }
         private void HELP_Click(object sender, RoutedEventArgs e)
         {
@@ -104,13 +127,31 @@ namespace K3yManager
             int i = checkall(usernum , passwdnum) ; 
             if(i == 0)
             {
+                Eenclass enc =new Eenclass(); 
+                byte[] crcword = Encoding.UTF8.GetBytes(passwdnum);
+                byte[] crcword2=CRC.crc.CRC16(crcword);
+                int times = int.Parse(con.GetValue("querytimes"));
+                if (times == 0 )
+                {
+                    con.SetValue("crc", enc.hex2str(crcword2));
+                }
+                else
+                {
+                    byte[] getcrc = enc.str2hex(con.GetValue("crc"));
+                    if(!getcrc.Equals(crcword2))
+                    {
+                        MessageBox.Show("FILE has been modify!!!!"); 
+                        return; 
+                    } 
+                }
+                String issave = saveall.IsChecked == true ? "True" : "False";
+                con.SetValue("savepass", issave);
+                string isauto = checkauto.IsChecked == true ? "True" : "False";
+                con.SetValue("auto", isauto);
 
                 Main main = new Main(usernum);
                 main.Show();
-                String issave = saveall.IsChecked==true?"True" : "False";
-                con.SetValue("savepass", issave);
-                string isauto = checkauto.IsChecked == true ? "True" : "False";
-                con.SetValue("auto", isauto); 
+               
                 this.Close(); 
             }
             else if(i ==(int)ERROR.FILE_MISSING)
@@ -118,22 +159,42 @@ namespace K3yManager
                 //online check
                 MessageBox.Show(error[i], "wrong", MessageBoxButton.OK, MessageBoxImage.Error) ; 
             }
+            else if(i == 0xFFBB) 
+            {
+                return; 
+            }
             else
             {
-                MessageBox.Show(error[i], "wrong", MessageBoxButton.OK, MessageBoxImage.Error) ; 
+                MessageBox.Show(error[i], "wrong", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+            
 
         }
 
         private int checkall(string usernum, string passwdnum)
         {
+            MyConfig con = new MyConfig();
             XmlDocument xmlDoc = new XmlDocument();
             try
-            { 
-              //   MyConfig 
-              //   FileInfo fi = new FileInfo("hehe.xml");
-              //   fi.LastWriteTime compare 
-       
+            {
+          
+                FileInfo fi = new FileInfo("hehe.xml");
+                string modifytime = fi.LastWriteTime.ToString();
+                int times = int.Parse(con.GetValue("querytimes"));
+                if (times != 0)
+                {
+                    string lasttime = con.GetValue("file");
+                    if (!lasttime.Equals(modifytime))
+                    {
+                        MessageBox.Show("FIlE HAS BEEN MODIFY!!!!");
+                        return 0xFFBB;
+                    }
+                    times++;
+                    con.SetValue("querytime", times.ToString());
+                    con.SetValue("file", modifytime);
+
+                }
+                con.SetValue("file", modifytime);
                 xmlDoc.Load("hehe.xml");
             }
             catch(Exception)
@@ -199,9 +260,6 @@ namespace K3yManager
             XmlDocument xmlDoc = new XmlDocument();
             try
             {
-                //   MyConfig 
-                //   FileInfo fi = new FileInfo("hehe.xml");
-                //   fi.LastWriteTime compare 
 
                 xmlDoc.Load("hehe.xml");
             }

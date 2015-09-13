@@ -56,7 +56,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CRC\crc.cs" />
     <Compile Include="Decry.cs" />
+    <Compile Include="DEXhunter\dex.cs" />
     <Compile Include="Eenclass.cs" />
     <Compile Include="Main.xaml.cs">
       <DependentUpon>Main.xaml</DependentUpon>

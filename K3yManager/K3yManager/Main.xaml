@@ -28,8 +28,6 @@
                 <Label Content="SUBJECT" HorizontalAlignment="Left" Margin="99,195,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
                 <Label Content="SECKEY(6nums)" HorizontalAlignment="Left" Margin="99,156,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="108" RenderTransformOrigin="0.174,0.48"/>
                 <TextBox Name="SEC" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="96,158,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120" MaxLength="6"/>
-                <ComboBox Name="ENCWAY" Grid.Column="1" HorizontalAlignment="Left" Margin="327,199,0,0" VerticalAlignment="Top" Width="120"/>
-                <Label Content="WAY2ENC" Grid.Column="1" HorizontalAlignment="Left" Margin="243,199,0,0" VerticalAlignment="Top"/>
                 <Button Name="logout"  Click="logout_Click" Content="logout" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="376,236,0,0" VerticalAlignment="Top" Width="84"/>
             </Grid>
         </TabItem>

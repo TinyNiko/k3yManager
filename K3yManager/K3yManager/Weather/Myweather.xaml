@@ -1,0 +1,25 @@
+﻿<Window x:Class="K3yManager.Weather.Myweather"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:K3yManager.Weather"
+        mc:Ignorable="d"
+        Title="Myweather" Height="404" Width="602">
+    <Grid>
+        <Label Content="输入城市名称：" Height="29" HorizontalAlignment="Left" Margin="12,12,0,0" Name="label1" VerticalAlignment="Top" Width="108" />
+        <Label Content="显示天气" Height="29" HorizontalAlignment="Left" Margin="94,91,0,0" Name="label3" VerticalAlignment="Top" Width="209" />
+        <Label Content="天气概况：" Height="29" HorizontalAlignment="Left" Margin="12,91,0,0" Name="label4" VerticalAlignment="Top" Width="76" />
+        <Label Content="天气实况：" Height="29" HorizontalAlignment="Left" Margin="12,164,0,0" Name="label5" VerticalAlignment="Top" Width="76" />
+        <TextBox Height="29" HorizontalAlignment="Left" Margin="139,12,0,0" Name="city" VerticalAlignment="Top" Width="81" />
+        <Image Height="29" HorizontalAlignment="Right" Margin="0,91,364,0" Name="image1" Stretch="Fill" VerticalAlignment="Top" Width="33" Source="../url.ico" />
+        <TextBox Height="71" HorizontalAlignment="Left" Margin="94,0,0,130" Name="moreinfo" VerticalAlignment="Bottom" Width="363" TextWrapping="Wrap" />
+        <Button x:Name="weaquery" Click="weaquery_Click" Content="query" HorizontalAlignment="Left" Margin="256,22,0,0" VerticalAlignment="Top" Width="75"/>
+        <Label Content="mingtian" Height="29" HorizontalAlignment="Left" Margin="12,263,0,0" Name="mingtian" VerticalAlignment="Top" Width="76" />
+        <Label Content="显示天气" Height="29" HorizontalAlignment="Left" Margin="102,311,0,0" Name="ht" VerticalAlignment="Top" Width="209" />
+        <Label Content="显示天气" Height="29" HorizontalAlignment="Left" Margin="102,263,0,0" Name="mt" VerticalAlignment="Top" Width="209" />
+        <Label Content="huotian" Height="29" HorizontalAlignment="Left" Margin="12,311,0,0" Name="houtian" VerticalAlignment="Top" Width="76" />
+        <Image Height="29" HorizontalAlignment="Right" Margin="0,263,364,0" Name="mtimage" Stretch="Fill" VerticalAlignment="Top" Width="33" Source="../url.ico" />
+        <Image Height="29" HorizontalAlignment="Right" Margin="0,311,364,0" Name="htimage1" Stretch="Fill" VerticalAlignment="Top" Width="33" Source="../url.ico" />
+    </Grid>
+</Window>

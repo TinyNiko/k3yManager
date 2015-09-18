@@ -1,6 +1,9 @@
-﻿using Microsoft.Win32;
+﻿using K3yManager.DataDeal;
+using K3yManager.Weather;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -22,33 +25,66 @@ namespace K3yManager
     /// Main.xaml 的交互逻辑
     /// </summary>
     public partial class Main : Window
-    {   
-        
+    {
+        private System.Windows.Forms.NotifyIcon  notifyIcon= new System.Windows.Forms.NotifyIcon(); 
         private string username;
         private static int CHANCE = 0;
         private MyConfig con;
         private string FilePath = null;
         private bool ChangeFlag_Error = false;
-        private int ChangeData_offset = 0;   
+        private int ChangeData_offset = 0;
+        private Icon ico = new Icon("url.ico");   
         public Main(string username)
         {
+            notifyIcon.Icon = ico; 
+            notifyIcon.MouseDoubleClick += dclick;
             con = new MyConfig();
             con.SetValue("username", username);
             con.SetValue("islogin", "true"); 
             this.username = username ;
             InitializeComponent();
+            this.Closing += MyExit;
             Thread aa = new Thread(getCombobox);
             aa.Start(); 
            
         }
         public Main()
         {
+            notifyIcon.Icon = ico;
+            notifyIcon.MouseDoubleClick += dclick;
             con = new MyConfig() ; 
             this.username = con.GetValue("username") ; 
             InitializeComponent();
+            this.Closing += MyExit;
             Thread aa = new Thread(getCombobox);
             aa.Start(); 
         }
+
+        private void MyExit(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if(MessageBox.Show(" MINI" ,"CHOOICE" ,MessageBoxButton.YesNo)==MessageBoxResult.Yes)
+            {
+                e.Cancel = true;
+                this.Hide();
+                this.notifyIcon.Visible = true; 
+                this.ShowInTaskbar = false;
+           
+                
+            }
+            else
+            {
+                e.Cancel = false; 
+            }
+        }
+
+        private  void dclick(object sender , EventArgs e)
+        {
+            notifyIcon.Visible = false;
+            this.Show();
+            WindowState = WindowState.Normal;
+            this.Focus();  
+        }
+
         enum ERROR 
         {
             CHOOSER_ERROR, PASSWD_EMPTY, PASSWD_WRONG, FILE_MISSING
@@ -59,10 +95,12 @@ namespace K3yManager
         private string[] show = { "     IMPORTANT     \nTAG:{0}\nCOUNT:{1}\nKEY:{2}\nSEC:{3}\n" ,
                                    "TAG:{0}\nCOUNT:{1}\nKEY{2}\n"}; 
 
+        private string[]  WAY2ENC = {"python" ,"c" ,"hex", "hexstring","trim"} ; 
         private void send2serverall(string username ,string tag , string user ,string pass)
         {
 
         }
+
 
         private void getCombobox()
         {
@@ -101,6 +139,12 @@ namespace K3yManager
                     }
                 }
             }
+
+            foreach(var astring  in WAY2ENC)
+            {
+                Way2Enc.Items.Add(astring);
+            }
+            
             string a = con.GetValue("querytimes") ; 
             int b = Int32.Parse(a) + 1 ;
             con.SetValue("querytime", b.ToString());
@@ -325,7 +369,9 @@ namespace K3yManager
                            CHANCE = 0;
                            return 0; 
                        }
+                        
                    }
+                    CHANCE++;
                 }
             }
             
@@ -477,5 +523,51 @@ namespace K3yManager
 
         }
 
+        private void change_Click(object sender, RoutedEventArgs e)
+        {
+            string src = Srctext.Text;
+            string way = Way2Enc.Text;
+            string des = dealstring(src, way);
+
+            Destext.Text = des;  
+        }
+
+
+        private string dealstring(string src , string way)
+        {
+            string result = null;
+            MyDataFormat a = new MyDataFormat(); 
+            
+            if (way.Equals("hex"))
+            {
+                result = a.dealhex(src);
+            }
+            else if (way.Equals("hexstring"))
+            {
+                result =a.dealhexstring(src);  
+            }
+            else if (way.Equals("python"))
+            {
+                result = a.dealpython(src); 
+            }
+            else if (way.Equals("c"))
+            {
+                result = a.dealc(src); 
+            }
+            else if(way.Equals("trim"))
+            {
+                result = a.dealtrim(src); 
+
+            }
+           
+
+            return result; 
+        }
+
+        private void weather_Click(object sender, RoutedEventArgs e)
+        {
+            Myweather wea = new Myweather();
+            wea.Show(); 
+        }
     }
 }

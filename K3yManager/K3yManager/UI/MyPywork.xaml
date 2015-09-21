@@ -1,0 +1,27 @@
+﻿<Window x:Class="K3yManager.UI.MyPywork"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:K3yManager.UI"
+        mc:Ignorable="d"
+        Title="MyPywork" Height="331.089" Width="657.513">
+    <Grid>
+        <Button Name="bn_pywork" Click="change_Click" Content="WORK" HorizontalAlignment="Left" Margin="528,10,0,0" VerticalAlignment="Top" Width="75"/>
+        <TextBox  Name="Srctext"  HorizontalAlignment="Left"  Height="83" 
+                          AcceptsReturn="True" TextWrapping="Wrap" VerticalAlignment="Top" Width="382">
+
+        </TextBox>
+        
+        <TextBox Name="Destext" AcceptsReturn="True" TextWrapping="Wrap" 
+                         HorizontalAlignment="Left" Height="217" VerticalAlignment="Bottom" Width="650">
+
+        </TextBox>
+        <Button  x:Name="pypath" Click="pypath_Click" Content="PATH" HorizontalAlignment="Left" Margin="412,10,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button x:Name="more" Content="Button" HorizontalAlignment="Left" Margin="412,59,0,0" VerticalAlignment="Top" Width="75"/>
+    </Grid>
+</Window>
+
+    
+    
+    

@@ -10,4 +10,10 @@
       <pass>1021F3A0A8008EC53569F734441D1EA7</pass>
     </TAG>
   </USER>
-</ALLUSER>
+  <USER Name="">
+    <TAG tag="qq">
+      <user>1021F3A0A8008EC53569F734441D1EA7</user>
+      <pass>1021F3A0A8008EC53569F734441D1EA7</pass>
+    </TAG>
+  </USER>
+<Signature xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><DigestValue>hblIvZKKe8pkCjwfX17Qxqiq2Wk=</DigestValue></Reference></SignedInfo><SignatureValue>AbzYdyeowZzVxhleNWWAze9RV4HDKUWVCdN70tDfWG6eDk65ErHMYqLmZMdVhW+anBaOvdWrr5Bduv4X0PGbBLC1zXld65Xm9YbQxoP7Ft/2VwaBElbSt+Z7BTgdO0C2sC/VVYKAoaJ94/xr+2exfNP3RIjZi0OocZ25ISR7GDI=</SignatureValue></Signature></ALLUSER>

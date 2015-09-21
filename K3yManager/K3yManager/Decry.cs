@@ -5,23 +5,26 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace K3yManager
 {
     class Decry
     {
        private byte[] m_src;
-       private byte[] m_key; 
+       private byte[] m_key;
+        private string prikey; 
        public  Decry(byte[] str ,byte[] key)
        {
             m_src = str;
             m_key = key;
+            getkey();
        }
 
        public Decry()
        {
-
-       }
+            getkey();
+        }
 
        public byte[] decaes(byte[] src, byte[] key)
        {
@@ -109,6 +112,7 @@ namespace K3yManager
             //ms.Read(byteenc,0, 512) ;
             return ms.ToArray();
        }
+
          public byte[] decdes(byte[] src, byte[] key)
         {
             byte[] newkey = checkdeskey(key);
@@ -141,6 +145,27 @@ namespace K3yManager
              return newkey;
          }
 
+        public byte[] decrsa(byte[] src)
+        {
+            RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
+            rsa.FromXmlString(prikey);
+            byte[] result = rsa.Decrypt(src, false);
+            return result; 
 
+        }
+        private void getkey()
+        {
+            MyConfig con = new MyConfig();
+            if (con.GetValue("RSAPR") == null)
+            {
+                MessageBox.Show("There is no KEY");
+                prikey = null;
+                return;
+            }
+            else
+            {
+                prikey = con.GetValue("RSAPR"); 
+            }
+        }
     }
 }

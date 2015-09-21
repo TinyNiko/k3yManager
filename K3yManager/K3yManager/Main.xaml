@@ -14,13 +14,13 @@
                     <ColumnDefinition Width="50*"/>
                     <ColumnDefinition Width="185*"/>
                 </Grid.ColumnDefinitions>
-                <Button Name="add" Click="add_Click" Content="add key" HorizontalAlignment="Left" Margin="45,236,0,0" VerticalAlignment="Top" Width="75" Grid.ColumnSpan="2"/>
-                <Button Name="Query" Click="query_Click" Content="query" HorizontalAlignment="Left" Margin="46,236,0,0" VerticalAlignment="Top" Width="75" Grid.Column="1" Grid.ColumnSpan="2"/>
-                <Button Name="delete" Click="delete_Click" Content="delete" HorizontalAlignment="Left" Margin="74,236,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.027,0.684" Grid.Column="2"/>
+                <Button Name="add" Click="add_Click" Content="add key" HorizontalAlignment="Left" Margin="10,238,0,0" VerticalAlignment="Top" Width="75"/>
+                <Button Name="Query" Click="query_Click" Content="query" HorizontalAlignment="Left" Margin="99,238,0,0" VerticalAlignment="Top" Width="75" Grid.ColumnSpan="2"/>
+                <Button Name="delete" Click="delete_Click" Content="delete" HorizontalAlignment="Right" Margin="0,236,224,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.027,0.684" Grid.Column="2"/>
                 <TextBox Name="TAG" HorizontalAlignment="Left" Height="23" Margin="96,22,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.Column="1" Grid.ColumnSpan="2"/>
                 <TextBox Name="COUNT"  HorizontalAlignment="Left" Height="23" Margin="96,65,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120" Grid.Column="1" Grid.ColumnSpan="2"/>
                 <Button Name="weather" Click="weather_Click" Content="Weather" HorizontalAlignment="Left" Margin="181,236,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.587,4.895" Grid.Column="2"/>
-                <Calendar HorizontalAlignment="Left" Margin="181,1,0,0" VerticalAlignment="Top" Grid.Column="2"/>
+                <Calendar Name="MC" HorizontalAlignment="Left" Margin="191,1,0,0" VerticalAlignment="Top" Grid.Column="2"/>
                 <TextBox Name="KEY" HorizontalAlignment="Left" Height="23" Margin="96,117,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120" Grid.Column="1" Grid.ColumnSpan="2"/>
                 <ComboBox Name="COMBOBOX" HorizontalAlignment="Left" Margin="96,199,0,0" VerticalAlignment="Top" Width="120" Grid.Column="1"  Grid.ColumnSpan="2"/>
                 <Label Content="TAG" HorizontalAlignment="Left" Margin="99,22,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
@@ -30,6 +30,7 @@
                 <Label Content="SECKEY(6nums)" HorizontalAlignment="Left" Margin="99,156,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="108" RenderTransformOrigin="0.174,0.48"/>
                 <TextBox Name="SEC" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="96,158,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120" MaxLength="6" Grid.ColumnSpan="2"/>
                 <Button Name="logout"  Click="logout_Click" Content="logout" Grid.Column="2" HorizontalAlignment="Left" Height="23" Margin="276,236,0,0" VerticalAlignment="Top" Width="84"/>
+                <Button x:Name="UpDate"  Click="UpDate_Click" Grid.ColumnSpan="2" Content="Button" Grid.Column="1" HorizontalAlignment="Left" Margin="76,238,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.067,0.211"/>
             </Grid>
         </TabItem>
         <TabItem Header="ENCRYPT">
@@ -61,7 +62,7 @@
             </Grid>
 
         </TabItem>
-        <TabItem Header="Tools">
+        <TabItem Header="Data">
             <Grid>
                 <Button Name="change" Click="change_Click" Content="change" HorizontalAlignment="Left" Margin="466,23,0,0" VerticalAlignment="Top" Width="75"/>
                 <ComboBox Name="Way2Enc" HorizontalAlignment="Left" Margin="444,58,0,0" VerticalAlignment="Top" Width="120"/>
@@ -113,7 +114,7 @@
         </TabItem>
         <TabItem Header="More">
             <Grid>
-                <Button Name="pywork" Content="PYwork" Margin="38,26,450,216" />
+                <Button Name="pywork" Content="PYwork" Click="pywork_Click"  Margin="38,26,450,216" />
                 <Button x:Name="Server" Content="Server" Margin="212,26,258,216"/>
             </Grid>
         </TabItem>

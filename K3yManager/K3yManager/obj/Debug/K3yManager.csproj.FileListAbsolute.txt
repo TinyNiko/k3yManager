@@ -18,3 +18,7 @@ G:\code\windows\K3yManager\K3yManager\obj\Debug\Main.g.cs
 G:\code\windows\K3yManager\K3yManager\obj\Debug\Weather\Myweather.g.cs
 G:\code\windows\K3yManager\K3yManager\obj\Debug\K3yManager_MarkupCompile.lref
 G:\code\windows\K3yManager\K3yManager\obj\Debug\Weather\Myweather.baml
+G:\code\windows\K3yManager\K3yManager\obj\Debug\UI\MyPywork.g.cs
+G:\code\windows\K3yManager\K3yManager\obj\Debug\UI\MyServer.g.cs
+G:\code\windows\K3yManager\K3yManager\obj\Debug\UI\MyPywork.baml
+G:\code\windows\K3yManager\K3yManager\obj\Debug\UI\MyServer.baml

@@ -39,6 +39,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -102,9 +103,18 @@
     <Compile Include="ShowModule\ModuleForm.Designer.cs">
       <DependentUpon>ModuleForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\MyPywork.xaml.cs">
+      <DependentUpon>MyPywork.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\MyServer.xaml.cs">
+      <DependentUpon>MyServer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Weather\Myweather.xaml.cs">
       <DependentUpon>Myweather.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Works\Aworks.cs" />
+    <Compile Include="Works\Pyworks.cs" />
+    <Compile Include="Works\ServerWork.cs" />
     <Page Include="Main.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -122,6 +132,14 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="RegisterUI.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\MyPywork.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\MyServer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

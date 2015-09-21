@@ -1,22 +1,14 @@
 ﻿using K3yManager.DataDeal;
+using K3yManager.UI;
 using K3yManager.Weather;
 using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using K3yManager.Works;
+using System.Windows; 
 using System.Xml;
 
 namespace K3yManager
@@ -26,6 +18,9 @@ namespace K3yManager
     /// </summary>
     public partial class Main : Window
     {
+        
+        const int UPDATE = 2333;
+        const int ADD    = 2334; 
         private System.Windows.Forms.NotifyIcon  notifyIcon= new System.Windows.Forms.NotifyIcon(); 
         private string username;
         private static int CHANCE = 0;
@@ -33,9 +28,49 @@ namespace K3yManager
         private string FilePath = null;
         private bool ChangeFlag_Error = false;
         private int ChangeData_offset = 0;
-        private Icon ico = new Icon("url.ico");   
+        private Icon ico = new Icon("url.ico");
+        Aworks aw = new Aworks();
+
+        class runpy
+        {
+            public runpy(int count)
+            {
+                this.count = count; 
+            }
+            private int count;
+            public void run()
+            {
+                checktime(count);
+            }
+            private void checktime(int count)
+            {
+
+                Thread.Sleep(1000);
+                string now = DateTime.Now.ToString("yyyy-MM-dd");
+                MyConfig con = new MyConfig();
+                string oldtime = con.GetValue("time");
+                if(oldtime.Equals(""))
+                {
+                    con.SetValue("time", now);
+                    return; 
+                }
+                DateTime told = DateTime.Parse(oldtime);
+                DateTime tnow = DateTime.Parse(now); 
+                System.TimeSpan t3 =tnow - told ; 
+                if (t3.TotalDays > 30 )
+                {
+                    con.SetValue("time", now); 
+                    Pyworks pw = new Pyworks();
+                    string pass = pw.work("..\\pyscript\\makepass " + count.ToString());
+                    MessageBox.Show("Passwd Timeout" + pass, "WARNING", MessageBoxButton.OK);
+
+                }
+            }
+        }
+
         public Main(string username)
         {
+
             notifyIcon.Icon = ico; 
             notifyIcon.MouseDoubleClick += dclick;
             con = new MyConfig();
@@ -45,8 +80,7 @@ namespace K3yManager
             InitializeComponent();
             this.Closing += MyExit;
             Thread aa = new Thread(getCombobox);
-            aa.Start(); 
-           
+            aa.Start();
         }
         public Main()
         {
@@ -57,9 +91,13 @@ namespace K3yManager
             InitializeComponent();
             this.Closing += MyExit;
             Thread aa = new Thread(getCombobox);
-            aa.Start(); 
+            aa.Start();
+           
         }
 
+
+
+        
         private void MyExit(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if(MessageBox.Show(" MINI" ,"CHOOICE" ,MessageBoxButton.YesNo)==MessageBoxResult.Yes)
@@ -109,6 +147,7 @@ namespace K3yManager
 
         private void getComboboxtag()
         {
+            int COUNT = 0; 
             MyConfig con = new MyConfig();
             if (!File.Exists("message.xml"))
             { 
@@ -118,6 +157,14 @@ namespace K3yManager
                     return;
                 }
                 return; 
+            }
+            Aworks aw = new Aworks();
+            if (con.GetValue("sig").Equals("true")) 
+            {
+                if (!aw.Verify("message.xml"))
+                {
+                    this.Close();
+                }
             }
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.Load("message.xml");
@@ -133,12 +180,16 @@ namespace K3yManager
                         XmlElement xe2 = (XmlElement)xn2;
                         if (xe2.GetAttribute("tag") !="")
                         {
-                            COMBOBOX.Items.Add(xe2.GetAttribute("tag")); 
+                            COMBOBOX.Items.Add(xe2.GetAttribute("tag"));
+                            COUNT++; 
                         }
 
                     }
                 }
             }
+            runpy ru = new runpy(COUNT); 
+            Thread bb = new Thread(ru.run); 
+            bb.Start(); 
 
             foreach(var astring  in WAY2ENC)
             {
@@ -181,7 +232,7 @@ namespace K3yManager
         
             
             send2serverall(username ,TAG.Text ,rsauser , rsapass ) ;
-            save2xml(username,TAG.Text,rsauser,rsapass);
+            save2xml(username,TAG.Text,rsauser,rsapass,ADD);
 
             COUNT.Text = "";
             SEC.Text = ""  ;
@@ -189,8 +240,10 @@ namespace K3yManager
             TAG.Text = ""  ; 
         }
 
-        private void save2xml(string username , string tag , string rsauser, string rsapass)
+        private void save2xml(string username , string tag , string rsauser, string rsapass,int choose)
         {
+            MyConfig con = new MyConfig();
+            
             bool issub = false;
             if (File.Exists("message.xml"))
             {
@@ -205,61 +258,92 @@ namespace K3yManager
                     if (xe.GetAttribute("Name") == username)
                     {
                         issub = true;
-                        XmlElement xe1 = xmlDoc.CreateElement("TAG");
-                        xe1.SetAttribute("tag", tag);
-                        XmlElement xe11 = xmlDoc.CreateElement("user");
-                        xe11.InnerText = rsauser;
-                        xe1.AppendChild(xe11);
 
-                        XmlElement xe12 = xmlDoc.CreateElement("pass");
-                        xe12.InnerText = rsapass;
-                        xe1.AppendChild(xe12);
-                        xe.AppendChild(xe1); 
-                        root.AppendChild(xe);
-                        xmlDoc.Save("message.xml");
-
+                        if (choose == ADD)
+                        {
+                            addexistuser(xmlDoc,root,xe,tag,rsauser ,rsapass); 
+                        }
+                        else
+                        {
+                            updateuser(); 
+                        }
                     }
                 }
                 if(!issub)
                 {
-                    // add new one 
-                    XmlElement xe1 = xmlDoc.CreateElement("USER");
-                    xe1.SetAttribute("Name", username); 
-                    XmlElement xe11 = xmlDoc.CreateElement("TAG");
-                    xe11.SetAttribute("tag" , tag) ;
-                    xe1.AppendChild(xe11);
-                    XmlElement xe111 = xmlDoc.CreateElement("user"); 
-                    XmlElement xe112 = xmlDoc.CreateElement("pass");
-                    xe111.InnerText = rsauser ;
-                    xe112.InnerText = rsapass ;
-                    xe11.AppendChild(xe111);
-                    xe11.AppendChild(xe112);
-                    xe1.AppendChild(xe11);
-                    root.AppendChild(xe1);
-                    xmlDoc.Save("message.xml");
+                    // add new user one 
+                    addnewuser(xmlDoc, root, tag, rsapass, rsauser);
+                   
                 }
                
-            }
+            } 
             else
             {
-                XmlTextWriter writer = new XmlTextWriter("message.xml", System.Text.Encoding.UTF8);
-                writer.Formatting = Formatting.Indented;
-                writer.WriteStartDocument();
-                writer.WriteStartElement("ALLUSER");
-                writer.WriteStartElement("USER");
-                writer.WriteAttributeString("Name", username);
-                writer.WriteStartElement("TAG");
-                writer.WriteAttributeString("tag", tag); 
-                writer.WriteStartElement("user");
-                writer.WriteString(rsauser); 
-                writer.WriteEndElement();
-                writer.WriteStartElement("pass");
-                writer.WriteString(rsapass);
-                writer.WriteEndElement();
-                writer.Close();
+                createfile(rsauser,rsapass,tag); 
             }
         }
 
+        private void  updateuser()
+        {
+
+        }
+        private void addexistuser(XmlDocument xmlDoc ,XmlNode root ,XmlElement xe , string tag,string rsauser,string rsapass)
+        {
+            XmlElement xe1 = xmlDoc.CreateElement("TAG");
+            xe1.SetAttribute("tag", tag);
+            XmlElement xe11 = xmlDoc.CreateElement("user");
+            xe11.InnerText = rsauser;
+            xe1.AppendChild(xe11);
+
+            XmlElement xe12 = xmlDoc.CreateElement("pass");
+            xe12.InnerText = rsapass;
+            xe1.AppendChild(xe12);
+            xe.AppendChild(xe1);
+            root.AppendChild(xe);
+            xmlDoc.Save("message.xml");
+            aw.Sigcreate("message.xml");
+            con.SetValue("sig", "true");
+        }
+
+        private void addnewuser(XmlDocument xmlDoc,XmlNode root ,string tag,string rsapass,string rsauser)
+        {
+            XmlElement xe1 = xmlDoc.CreateElement("USER");
+            xe1.SetAttribute("Name", username);
+            XmlElement xe11 = xmlDoc.CreateElement("TAG");
+            xe11.SetAttribute("tag", tag);
+            xe1.AppendChild(xe11);
+            XmlElement xe111 = xmlDoc.CreateElement("user");
+            XmlElement xe112 = xmlDoc.CreateElement("pass");
+            xe111.InnerText = rsauser;
+            xe112.InnerText = rsapass;
+            xe11.AppendChild(xe111);
+            xe11.AppendChild(xe112);
+            xe1.AppendChild(xe11);
+            root.AppendChild(xe1);
+            xmlDoc.Save("message.xml");
+            aw.Sigcreate("message.xml");
+            con.SetValue("sig", "true");
+        }
+        private void createfile(string rsauser,string rsapass,string tag)
+        {
+            XmlTextWriter writer = new XmlTextWriter("message.xml", System.Text.Encoding.UTF8);
+            writer.Formatting = Formatting.Indented;
+            writer.WriteStartDocument();
+            writer.WriteStartElement("ALLUSER");
+            writer.WriteStartElement("USER");
+            writer.WriteAttributeString("Name", username);
+            writer.WriteStartElement("TAG");
+            writer.WriteAttributeString("tag", tag);
+            writer.WriteStartElement("user");
+            writer.WriteString(rsauser);
+            writer.WriteEndElement();
+            writer.WriteStartElement("pass");
+            writer.WriteString(rsapass);
+            writer.WriteEndElement();
+            writer.Close();
+            aw.Sigcreate("message.xml");
+            con.SetValue("sig", "true");
+        }
         private void delete_Click(object sender, RoutedEventArgs e)
         {
             int i = 0;  
@@ -568,6 +652,54 @@ namespace K3yManager
         {
             Myweather wea = new Myweather();
             wea.Show(); 
+        }
+
+        private void pywork_Click(object sender, RoutedEventArgs e)
+        {
+            MyPywork my = new MyPywork();
+            my.Show(); 
+        }
+
+        private void UpDate_Click(object sender, RoutedEventArgs e)
+        {
+            if (!File.Exists("message.xml"))
+            {
+                MessageBox.Show("FILE MISSING"); 
+            }
+            if ( COUNT.Text == "" || KEY.Text == "" || SEC.Text == "")
+            {
+                MessageBox.Show(myerror[0], "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            else
+            {
+                string showmessage = String.Format(show[0], COMBOBOX.Text, COUNT.Text, KEY.Text, SEC.Text);
+                if (MessageBox.Show(showmessage, "IMPORTANT", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
+                {
+                    COUNT.Text = "";
+                    KEY.Text = "";
+                    SEC.Text = "";
+                    return;
+                }
+            }
+
+            byte[] user = Encoding.UTF8.GetBytes(COUNT.Text);
+            byte[] pass = Encoding.UTF8.GetBytes(KEY.Text);
+
+            byte[] sec = Encoding.UTF8.GetBytes(SEC.Text);
+            Eenclass enc = new Eenclass();
+
+            string rsauser = enc.hex2str(enc.aesenc(user, sec));
+            string rsapass = enc.hex2str(enc.aesenc(pass, sec));
+
+            send2serverall(username, COMBOBOX.Text, rsauser, rsapass);
+            save2xml(username, TAG.Text, rsauser, rsapass,UPDATE);
+
+            COUNT.Text = "";
+            SEC.Text = "";
+            KEY.Text = "";
+            TAG.Text = "";
+
         }
     }
 }

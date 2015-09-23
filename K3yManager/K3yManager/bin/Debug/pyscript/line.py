@@ -20,7 +20,7 @@ def getfile(path) :
 			if checkfile(f):
 				readfile(path+"\\"+f)
 		for dirnext in dirname:
-			if dirnext =='obj' or dirnext=='bin' or  dirnext=='Properties':
+			if dirnext =='obj' or dirnext=='Properties':
 				continue
 			getfile(path+"\\"+dirnext)	
 

@@ -36,5 +36,15 @@ namespace K3yManager.UI
         {
 
         }
+
+        private void bn_file_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void bn_stop_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

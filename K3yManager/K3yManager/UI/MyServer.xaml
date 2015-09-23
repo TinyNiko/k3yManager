@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:K3yManager.UI"
         mc:Ignorable="d"
-        Title="Server" Height="329.534" Width="617.098">
+        Title="Server" Height="443.288" Width="698.016">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="30*"/>
@@ -18,9 +18,12 @@
 
         </TextBox>
         <TextBox Name="Destext" AcceptsReturn="True" TextWrapping="Wrap" 
-                         HorizontalAlignment="Left" Height="217" VerticalAlignment="Bottom" Width="382" Grid.ColumnSpan="3">
+                         HorizontalAlignment="Left" Height="324" VerticalAlignment="Bottom" Width="382" Grid.ColumnSpan="3">
 
         </TextBox>
         <Button x:Name="bn_Ping"  Click="bn_Ping_Click"   Content="PING" Grid.Column="2" HorizontalAlignment="Left" Margin="458,23,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button x:Name="bn_file" Click="bn_file_Click" Content="file" Grid.Column="2" HorizontalAlignment="Left" Margin="458,69,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button x:Name="bn_stop" Click="bn_stop_Click"   Content="stop" Grid.Column="2" HorizontalAlignment="Left" Margin="363,69,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button x:Name="bn_client" Content="client" Grid.Column="2" HorizontalAlignment="Left" Margin="552,23,0,0" VerticalAlignment="Top" Width="75"/>
     </Grid>
 </Window>

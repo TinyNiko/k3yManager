@@ -13,9 +13,7 @@ using System.Xml;
 
 namespace K3yManager
 {
-    /// <summary>
-    /// Main.xaml 的交互逻辑
-    /// </summary>
+
     public partial class Main : Window
     {
         
@@ -57,6 +55,7 @@ namespace K3yManager
                 DateTime told = DateTime.Parse(oldtime);
                 DateTime tnow = DateTime.Parse(now); 
                 System.TimeSpan t3 =tnow - told ; 
+
                 if (t3.TotalDays > 30 )
                 {
                     con.SetValue("time", now); 
@@ -700,6 +699,19 @@ namespace K3yManager
             KEY.Text = "";
             TAG.Text = "";
 
+        }
+
+        private void Scan_Click(object sender, RoutedEventArgs e)
+        {
+            FileScan fs = new FileScan();
+            fs.Show(); 
+
+        }
+
+        private void Server_Click(object sender, RoutedEventArgs e)
+        {
+            MyServer ms = new MyServer();
+            ms.Show(); 
         }
     }
 }

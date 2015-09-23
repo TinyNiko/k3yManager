@@ -22,3 +22,5 @@ G:\code\windows\K3yManager\K3yManager\obj\Debug\UI\MyPywork.g.cs
 G:\code\windows\K3yManager\K3yManager\obj\Debug\UI\MyServer.g.cs
 G:\code\windows\K3yManager\K3yManager\obj\Debug\UI\MyPywork.baml
 G:\code\windows\K3yManager\K3yManager\obj\Debug\UI\MyServer.baml
+G:\code\windows\K3yManager\K3yManager\obj\Debug\UI\FileScan.g.cs
+G:\code\windows\K3yManager\K3yManager\obj\Debug\UI\FileScan.baml

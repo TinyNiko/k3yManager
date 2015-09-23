@@ -115,7 +115,8 @@
         <TabItem Header="More">
             <Grid>
                 <Button Name="pywork" Content="PYwork" Click="pywork_Click"  Margin="38,26,450,216" />
-                <Button x:Name="Server" Content="Server" Margin="212,26,258,216"/>
+                <Button x:Name="Server" Content="Server" Click="Server_Click" Margin="212,26,258,216"/>
+                <Button x:Name="Scan" Content="FILESCAN" Click="Scan_Click" Margin="396,26,74,216"/>
             </Grid>
         </TabItem>
 

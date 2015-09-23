@@ -103,6 +103,9 @@
     <Compile Include="ShowModule\ModuleForm.Designer.cs">
       <DependentUpon>ModuleForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\FileScan.xaml.cs">
+      <DependentUpon>FileScan.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\MyPywork.xaml.cs">
       <DependentUpon>MyPywork.xaml</DependentUpon>
     </Compile>
@@ -132,6 +135,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="RegisterUI.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\FileScan.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -12,24 +12,28 @@ namespace K3yManager
    
     class Eenclass
     {
+        private MyConfig con; 
         private byte[] m_key;
         private byte[] m_src;
- 
+        private string pubkey; 
         public Eenclass()
         {
-
+            creatersakey(); 
         }
         public Eenclass(byte[] src)
         {
             m_src = src  ;
             m_key = null ;
+            creatersakey();
         }
 
         public Eenclass(byte[] src, byte[] key)
         {
             m_key = key ;  
             m_src = src ;
+            creatersakey();
         }
+        
         public string hex2str(byte[] src)
         {
             string str = BitConverter.ToString(src).Replace("-", string.Empty);
@@ -168,12 +172,31 @@ namespace K3yManager
 
         public byte[] rsaenc(byte[] src , byte[] key)
         {
-            RSA rsa = new RSACryptoServiceProvider();
-            MemoryStream ms = new MemoryStream();
-            byte[] result = null;
+            RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
+            rsa.FromXmlString(pubkey);
+            byte[] result = rsa.Encrypt(src, false);
             return result; 
+
         }
 
+        private void creatersakey()
+        {
+            con = new MyConfig();
+            RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
+            if (con.GetValue("RSAP") == null)
+            {
+                
+                con.SetValue("RSAP", rsa.ToXmlString(true));
+                con.SetValue("RSAPR", rsa.ToXmlString(false));
+                pubkey = con.GetValue("RSAP"); 
 
+            }
+            else
+            {  
+                pubkey = con.GetValue("RSAP");
+            }
+            
+
+        }
     }
 }

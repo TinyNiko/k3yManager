@@ -34,7 +34,14 @@
                    FontSize="20" FontFamily="Consolas bold"
                    HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,40,0,42"
                    ></TextBlock>
-
+        <Label Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+               FontSize="20" FontFamily="Consolas bold">auto</Label>
+        <CheckBox Name="checkauto" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="40,0,0,8"
+                  ></CheckBox>
+        <Label Grid.Row="1" HorizontalAlignment="Right"  Grid.Column="1"  VerticalAlignment="Bottom"
+               FontSize="20" FontFamily="Consolas bold">savepass</Label>
+        <CheckBox Name="saveall" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="40,0,0,8"
+                  ></CheckBox>
         <Button Grid.Column="1" Grid.Row="2" Height="40" Width="110"
                 Margin="5,20,-10,4" Name="REGISTER" Click="REGISTER_Click_1">REGISTER</Button>
         <Button Name="HELP" Grid.Column="2" Grid.Row="2" Height="40" Width="110"

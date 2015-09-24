@@ -1,0 +1,30 @@
+﻿<Window x:Class="K3yManager.UI.MyServer"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:K3yManager.UI"
+        mc:Ignorable="d"
+        Title="Server" Height="443.288" Width="698.016">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="30*"/>
+            <ColumnDefinition Width="17*"/>
+            <ColumnDefinition Width="562*"/>
+        </Grid.ColumnDefinitions>
+        <Button   Name="start" Click="start_Click" Content="start" HorizontalAlignment="Left" Margin="363,23,0,0" VerticalAlignment="Top" Width="75" Grid.Column="2" IsEnabled="False"/>
+        <TextBox  Name="Srctext"  HorizontalAlignment="Left"  Height="83" 
+                          AcceptsReturn="True" TextWrapping="Wrap" VerticalAlignment="Top" Width="382" Grid.ColumnSpan="3">
+
+        </TextBox>
+        <TextBox Name="Destext" AcceptsReturn="True" TextWrapping="Wrap" 
+                         HorizontalAlignment="Left" Height="324" VerticalAlignment="Bottom" Width="382" Grid.ColumnSpan="3">
+
+        </TextBox>
+        <Button x:Name="bn_Ping"  Click="bn_Ping_Click"   Content="PING" Grid.Column="2" HorizontalAlignment="Left" Margin="458,23,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button x:Name="bn_file" Click="bn_file_Click" Content="file" Grid.Column="2" HorizontalAlignment="Left" Margin="458,69,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button x:Name="bn_stop" Click="bn_stop_Click"   Content="stop" Grid.Column="2" HorizontalAlignment="Left" Margin="363,69,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button x:Name="bn_client" Content="client" Grid.Column="2" HorizontalAlignment="Left" Margin="552,23,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button x:Name="bn_info" Content="Info" Click="bn_info_Click" Grid.Column="2" HorizontalAlignment="Left" Margin="552,69,0,0" VerticalAlignment="Top" Width="75"/>
+    </Grid>
+</Window>

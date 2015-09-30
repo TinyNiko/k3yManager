@@ -15,10 +15,13 @@ namespace K3yManager.Works
 {
     public class Aworks
     {
-
+        private string g_newpath;
+        private string g_filepath;
         private string _serialNumber;
         private string _driveLetter;
-
+        private string[] WAY2CRYPTO = { "AES", "DES", "RC4" };
+        private Eenclass enc = new Eenclass();
+        private Decry dec = new Decry();
         [DllImportAttribute("kernel32.dll")]
         public static extern int WinExec(string exename, int type);
 
@@ -47,7 +50,7 @@ namespace K3yManager.Works
 
         }
 
-        public  void Sigcreate(String name)
+        public void Sigcreate(String name)
         {
             try
             {
@@ -116,8 +119,8 @@ namespace K3yManager.Works
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.ToString()); 
-                return false; 
+                MessageBox.Show(e.ToString());
+                return false;
             }
 
         }
@@ -177,20 +180,20 @@ namespace K3yManager.Works
                 diskArray = getValueInQuotes(dm["Antecedent"].ToString()).Split(',');
                 driveNumber = diskArray[0].Remove(0, 6).Trim();
                 if (driveLetter == this._driveLetter)
-                 {
+                {
                     /* This is where we get the drive serial */
-                     ManagementObjectSearcher disks = new ManagementObjectSearcher("SELECT * FROM Win32_DiskDrive");
+                    ManagementObjectSearcher disks = new ManagementObjectSearcher("SELECT * FROM Win32_DiskDrive");
                     foreach (ManagementObject disk in disks.Get())
-                     {
+                    {
 
                         if (disk["Name"].ToString() == ("\\\\.\\PHYSICALDRIVE" + driveNumber) & disk["InterfaceType"].ToString() == "USB")
-                         {
+                        {
                             this._serialNumber = parseSerialFromDeviceID(disk["PNPDeviceID"].ToString());
-                         }
-                     }
+                        }
+                    }
                 }
             }
-       }
+        }
 
 
 
@@ -224,7 +227,7 @@ namespace K3yManager.Works
             return parsedValue;
         }
 
-        public  string getUname()
+        public string getUname()
         {
             DriveInfo[] allDrives = DriveInfo.GetDrives();
             /*
@@ -242,90 +245,155 @@ namespace K3yManager.Works
                 }
             }
 
-            return null; 
+            return null;
         }
 
-        public Boolean EncFile(string path,string encway,byte[] key)
+        public Boolean EncFile(string path, string encway, byte[] key)
         {
-            Eenclass enc = new Eenclass();
-            StreamReader sr = new StreamReader(path); 
-            if(true)
-            {
-                return true; 
-            }
-            else
-            {
-                return false;
-            }
+            g_newpath = null; 
+            g_filepath = path;
+            return RealEncFile(encway, key);
         }
         // don't overwrite 
-        public Boolean EncFile(string filepath ,string newpath, string encway,byte[] key)
+        public Boolean EncFile(string filepath, string newpath, string encway, byte[] key)
         {
-            Eenclass enc = new Eenclass();
-            StreamReader sr = new StreamReader(filepath);
-            byte[] filebyte = Encoding.UTF8.GetBytes(sr.ReadToEnd()); 
+            g_filepath = filepath;
+            g_newpath = newpath;
+            return RealEncFile(encway, key);
 
-            if (true)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
         }
 
-        public byte[] generatekey(string salt , string key)
+        private bool test(byte[] bkey)
+        {
+            string src = "11111111111111111111\n";
+
+            byte[] bsrc = Encoding.UTF8.GetBytes(src);
+       
+            byte[] tmp = enc.desenc(bsrc, bkey);
+            MessageBox.Show(enc.hex2str(tmp));
+            byte[] tmp2=dec.decdes(tmp, bkey);
+
+            MessageBox.Show(System.Text.Encoding.Default.GetString(tmp2));
+            return true; 
+        }
+
+
+        public byte[] generatekey(string salt, string key)
         {
             byte[] result = new byte[16];
-
-
-            return result; 
+            string src = salt + key;
+            result =enc.Mymd5(src);
+            return result;
         }
 
         public Boolean webcheckpass(string salt)
         {//TODO 
-            return true; 
+            return true;
         }
-        public Boolean DecFile(string path , string encway,byte[] key)
+
+        public Boolean DecFile(string path, string encway, byte[] key)
         {
-
-            Eenclass enc = new Eenclass();
-
-            StreamReader sr = new StreamReader(path);
-            byte[] filebyte = Encoding.UTF8.GetBytes(sr.ReadToEnd());
-
-            if (true)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            g_filepath = path;
+            g_newpath = null;
+            return RealDecFile(encway, key);
         }
 
 
         // don't overwrite
 
-        public Boolean DecFile(string filepath , string newpath, string encway,byte[] key)
+        public Boolean DecFile(string filepath, string newpath, string encway, byte[] key)
         {
+            g_newpath = newpath;
+            g_filepath = filepath;
+            return RealDecFile(encway, key);
+        }
 
-            Eenclass enc = new Eenclass();
 
-            StreamReader sr = new StreamReader(filepath);
-            byte[] filebyte = Encoding.UTF8.GetBytes(sr.ReadToEnd());
-
-            if (true)
+        private bool RealEncFile(string encway, byte[] key)
+        {
+            FileStream fs = new FileStream(g_filepath, FileMode.Open);
+            byte[] tmp = null; 
+            byte[] src=new byte[fs.Length];
+            fs.Read(src, 0, src.Length);
+            if (encway.Equals("AES"))
             {
-                return true;
+                 tmp = enc.aesenc(src, key);
+         
+            }
+            else if (encway.Equals("DES"))
+            {
+               tmp = enc.desenc(src, key);
+            }
+            else if (encway.Equals("RC4"))
+            {
+                tmp = enc.rc4enc(src, key); 
             }
             else
             {
                 return false;
             }
+            
+            if(g_newpath==null)
+            {// 
+                FileStream oldfile = new FileStream(g_filepath, FileMode.Truncate);
+                oldfile.Write(tmp, 0, tmp.Length);
+                oldfile.Close(); 
+            }
+            else
+            {//overwrite
+              FileStream newfile =new FileStream(g_newpath,FileMode.Create) ;
+              //StreamWriter sw = new StreamWriter(newfile, Encoding.UTF8);
+              newfile.Write(tmp, 0, tmp.Length);
+                newfile.Close();
+            }
+
+            return true;
         }
 
+        private bool RealDecFile(string encway, byte[] key)
+        {
+            byte[] tmp=null;
+            FileStream fs = new FileStream(g_filepath, FileMode.Open);
+            byte[] src = new byte[fs.Length] ;
+            fs.Read(src, 0, src.Length);
+            fs.Close();
+          
+            if (encway.Equals("AES"))
+            {
+               tmp =  dec.decaes(src, key);
+             
+            }
+            else if (encway.Equals("DES"))
+            {
+                tmp =dec.decdes(src, key);
+           
+            }
+            else if (encway.Equals("RC4"))
+            {
+                tmp = dec.decrc4(src, key); 
+            }
+            else
+            {
+                return false;
+            }
+
+            if (g_newpath==null)
+            {// 
+                FileStream oldfile = new FileStream(g_filepath, FileMode.Truncate);
+                oldfile.Write(tmp, 0, tmp.Length);
+                oldfile.Close();
+            }
+            else
+            {//overwrite
+                FileStream newfile = new FileStream(g_newpath, FileMode.Create);
+                //StreamWriter sw = new StreamWriter(newfile, Encoding.UTF8);
+                newfile.Write(tmp, 0, tmp.Length);
+                newfile.Close(); 
+            }
+
+
+            return true ;
+        }
 
 
     }

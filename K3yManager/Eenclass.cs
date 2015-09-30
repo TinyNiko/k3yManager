@@ -46,6 +46,13 @@ namespace K3yManager
 
             return md5.ComputeHash(m_src); 
         }
+        public byte[] Mymd5(string src)
+        {
+            MD5 md5 = MD5.Create();
+            byte[] bsrc = Encoding.UTF8.GetBytes(src); 
+            return md5.ComputeHash(bsrc);
+        }
+
 
         public byte[] MySHA256()
         {
@@ -55,7 +62,7 @@ namespace K3yManager
         private byte[] checkaeskey(byte[] key)
         {
             byte[] newkey = new byte[16];
-            key.CopyTo(newkey, 0);
+            Array.Copy(key,newkey, newkey.Length);
             for (int i = key.Length; i < 16; i++)
             {
                 newkey[i] = 0x61;
@@ -71,7 +78,7 @@ namespace K3yManager
                                              0x12, 0x23, 0x66, 0x54 , 0x99, 0xA2, 0xB3,0xCE};
             AesCryptoServiceProvider myaes = new AesCryptoServiceProvider();
             MemoryStream ms = new MemoryStream();
-            myaes.Mode = CipherMode.CFB;
+            myaes.Mode = CipherMode.CBC;
             myaes.Key = newkey;
             myaes.IV = mInitializationVector; 
             ICryptoTransform trans = myaes.CreateEncryptor() ; 
@@ -100,7 +107,7 @@ namespace K3yManager
                                              0x12, 0x23, 0x66, 0x54 , 0x99, 0xA2, 0xB3,0xCE};
             AesCryptoServiceProvider myaes = new AesCryptoServiceProvider();
             MemoryStream ms = new MemoryStream();
-            myaes.Mode = CipherMode.CFB;
+            myaes.Mode = CipherMode.CBC;
             myaes.Key = newkey;
             myaes.IV = mInitializationVector;
             ICryptoTransform trans = myaes.CreateEncryptor();
@@ -118,7 +125,7 @@ namespace K3yManager
             byte[] mInitializationVector = { 0x01, 0x34, 0x56, 0x78, 0x90, 0xAB, 0xf7, 0xEF };
             DES mydes = new DESCryptoServiceProvider();
             MemoryStream ms = new MemoryStream();
-            mydes.Mode = CipherMode.CFB;
+            mydes.Mode = CipherMode.CBC;
             mydes.Key = newkey;
             mydes.IV = mInitializationVector;
             ICryptoTransform encryptor = mydes.CreateEncryptor();
@@ -137,7 +144,7 @@ namespace K3yManager
             byte[] mInitializationVector = { 0x01, 0x34, 0x56, 0x78, 0x90, 0xAB, 0xf7, 0xEF };
             DES mydes = new DESCryptoServiceProvider();
             MemoryStream ms = new MemoryStream();
-            mydes.Mode = CipherMode.CFB;
+            mydes.Mode = CipherMode.CBC;
             mydes.Key = newkey;
             mydes.IV = mInitializationVector;
             ICryptoTransform encryptor = mydes.CreateEncryptor();
@@ -148,13 +155,15 @@ namespace K3yManager
             // byte[] byteenc = new byte[512] ; 
             //ms.Read(byteenc,0, 512) ;
             return ms.ToArray();
+              
         }
       
+
 
         private byte[] checkdeskey(byte[] key)
         {
             byte[] newkey = new byte[8];
-            key.CopyTo(newkey, 0);
+            Array.Copy(key,newkey,8);
             for (int i = key.Length; i < 8; i++)
             {
                 newkey[i] = 0x61;
@@ -198,5 +207,25 @@ namespace K3yManager
             
 
         }
+
+
+        public byte[] rc4enc()
+        {
+            byte[] result = null;
+
+            return result;
+
+
+
+        }
+
+
+        public byte[] rc4enc(byte[] src ,byte[] key)
+        {
+            byte[] result = null;
+
+            return result;      
+        }
+
     }
 }

@@ -729,7 +729,7 @@ namespace K3yManager
             fileDialog.Filter = "(*.*)|*.*";
             if (fileDialog.ShowDialog() == true)
             {
-                string FilePath = fileDialog.FileName;
+                FilePath = fileDialog.FileName;
                 enc_path.Text = FilePath;
             }
         }
@@ -739,12 +739,13 @@ namespace K3yManager
             
             Aworks aw = new Aworks();
             string name = aw.getUname();
-            if (name.Equals(""))
+            if (name==null)
             {
                 MessageBox.Show("检测有误，请稍后再试！！！", "错误", MessageBoxButton.OK);
                 return;
             }
-            aw.getSerialNumberFromDriveLetter(name);
+
+            key.Text = "12345";//aw.getSerialNumberFromDriveLetter(name);
 
         }
 
@@ -813,9 +814,9 @@ namespace K3yManager
             if (checkBox.IsChecked == false)
             {
                 int index = FilePath.IndexOf(".");
-                string newpath = FilePath.Substring(0, index) + "new" + FilePath.Substring(index);
+                string newpath = FilePath.Substring(0, index-3) + "src" + FilePath.Substring(index);
                 MessageBox.Show(newpath);
-                checkstate(aw.DecFile(newpath, Com_Encway.Text,fkey));
+                checkstate(aw.DecFile(FilePath ,newpath, Com_Encway.Text,fkey));
         
             }
             else
@@ -831,6 +832,12 @@ namespace K3yManager
         }
         private void download_Click(object sender, RoutedEventArgs e)
         {
+
+        }
+
+        private void DEX_Click(object sender, RoutedEventArgs e)
+        {
+            string filepath = ChoosedPath.Text; 
 
         }
     }

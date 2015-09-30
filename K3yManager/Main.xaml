@@ -107,7 +107,7 @@
                 </Grid>
                 <StackPanel Orientation="Horizontal">
                     <Button x:Name="ODEX" Content="ODEX" Width="100" HorizontalAlignment="Center" Margin="20"/>
-                    <Button Name="DEX"  Content="DEX" Width="100" HorizontalAlignment="Center" Margin="20"></Button>
+                    <Button Name="DEX"  Click="DEX_Click" Content="DEX" Width="100" HorizontalAlignment="Center" Margin="20"></Button>
                     <Button Name="ELF" Content="ELF" Width="100" HorizontalAlignment="Center" Margin="20"></Button>
                 </StackPanel>
 

@@ -12,7 +12,7 @@
             <ColumnDefinition Width="17*"/>
             <ColumnDefinition Width="562*"/>
         </Grid.ColumnDefinitions>
-        <Button   Name="start" Click="start_Click" Content="start" HorizontalAlignment="Left" Margin="363,23,0,0" VerticalAlignment="Top" Width="75" Grid.Column="2" IsEnabled="False"/>
+        <Button   Name="start" Click="start_Click" Content="start" HorizontalAlignment="Left" Margin="363,23,0,0" VerticalAlignment="Top" Width="75" Grid.Column="2" />
         <TextBox  Name="Srctext"  HorizontalAlignment="Left"  Height="83" 
                           AcceptsReturn="True" TextWrapping="Wrap" VerticalAlignment="Top" Width="382" Grid.ColumnSpan="3">
 
@@ -24,7 +24,7 @@
         <Button x:Name="bn_Ping"  Click="bn_Ping_Click"   Content="PING" Grid.Column="2" HorizontalAlignment="Left" Margin="458,23,0,0" VerticalAlignment="Top" Width="75"/>
         <Button x:Name="bn_file" Click="bn_file_Click" Content="file" Grid.Column="2" HorizontalAlignment="Left" Margin="458,69,0,0" VerticalAlignment="Top" Width="75"/>
         <Button x:Name="bn_stop" Click="bn_stop_Click"   Content="stop" Grid.Column="2" HorizontalAlignment="Left" Margin="363,69,0,0" VerticalAlignment="Top" Width="75"/>
-        <Button x:Name="bn_client" Content="client" Grid.Column="2" HorizontalAlignment="Left" Margin="552,23,0,0" VerticalAlignment="Top" Width="75"/>
-        <Button x:Name="bn_info" Content="Info" Click="bn_info_Click" Grid.Column="2" HorizontalAlignment="Left" Margin="552,69,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button x:Name="bn_client" Click="bn_client_Click" Content="client" Grid.Column="2" HorizontalAlignment="Left" Margin="552,23,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button x:Name="bn_info" Click="bn_info_Click_1" Content="Info"  Grid.Column="2" HorizontalAlignment="Left" Margin="552,69,0,0" VerticalAlignment="Top" Width="75"/>
     </Grid>
 </Window>

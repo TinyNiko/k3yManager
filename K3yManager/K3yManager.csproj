@@ -107,6 +107,12 @@
     <Compile Include="UI\CloudDown.xaml.cs">
       <DependentUpon>CloudDown.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\Dex.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Dex.Designer.cs">
+      <DependentUpon>Dex.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\FileScan.xaml.cs">
       <DependentUpon>FileScan.xaml</DependentUpon>
     </Compile>
@@ -120,6 +126,7 @@
       <DependentUpon>Myweather.xaml</DependentUpon>
     </Compile>
     <Compile Include="Works\Aworks.cs" />
+    <Compile Include="Works\Dex.cs" />
     <Compile Include="Works\Pyworks.cs" />
     <Compile Include="Works\ServerWork.cs" />
     <Page Include="Main.xaml">
@@ -180,6 +187,9 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Dex.resx">
+      <DependentUpon>Dex.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\DataSources\System.Data.DataSet.datasource" />
     <None Include="Properties\Settings.settings">

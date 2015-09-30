@@ -12,6 +12,7 @@ namespace K3yManager.Works
 {
     public class ServerWork
     {
+        System.Diagnostics.Stopwatch stopwatch = null; 
         public string pingstr;
         private Socket s;
         private List<String> clientip = new List<string>(); 
@@ -33,10 +34,11 @@ namespace K3yManager.Works
         private string getIP()
         {
             string hostname = Dns.GetHostName();
-            IPHostEntry localhost = Dns.GetHostEntry(hostname);
-            IPAddress ip = localhost.AddressList[0];
-            return ip.ToString(); 
-
+            IPAddress localhost = Dns.GetHostAddresses(hostname)
+             .Where(ip => ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+              .First();
+            return localhost.ToString();
+           
         }
         private void _myPing_PingCompleted(object sender, PingCompletedEventArgs e)
         {
@@ -52,7 +54,6 @@ namespace K3yManager.Works
 
         public void startListen(int port)
         {
-            
             try
             {
                 string ipstr = getIP();
@@ -84,7 +85,31 @@ namespace K3yManager.Works
 
         public void stopserver()
         {
-            s.Close(); 
+            s.Close();
+            stopwatch.Stop();
+            stopwatch.Reset();
+        }
+
+        public string ShowInfo()
+        {
+            // 客户端连接数 ，服务器时间
+            if(s==null)
+            {
+                return "服务器未启动\n";
+            }
+            stopwatch.Stop();
+            string result = "";
+            result += "启动时间：" + stopwatch.Elapsed+"\n";
+            result += "连接数 ：" + clientip.Count + "\n";  
+
+            stopwatch.Start();
+            return result; 
+        }
+
+        public void Timer()
+        {
+            stopwatch= new System.Diagnostics.Stopwatch(); 
+            stopwatch.Start(); 
         }
     }
 }

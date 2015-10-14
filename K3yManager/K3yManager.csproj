@@ -43,6 +43,7 @@
     <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -107,11 +108,8 @@
     <Compile Include="UI\CloudDown.xaml.cs">
       <DependentUpon>CloudDown.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\Dex.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\Dex.Designer.cs">
-      <DependentUpon>Dex.cs</DependentUpon>
+    <Compile Include="UI\Dex.xaml.cs">
+      <DependentUpon>Dex.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\FileScan.xaml.cs">
       <DependentUpon>FileScan.xaml</DependentUpon>
@@ -126,7 +124,8 @@
       <DependentUpon>Myweather.xaml</DependentUpon>
     </Compile>
     <Compile Include="Works\Aworks.cs" />
-    <Compile Include="Works\Dex.cs" />
+    <Compile Include="Works\DexWorks.cs" />
+    <Compile Include="Works\Elfworks.cs" />
     <Compile Include="Works\Pyworks.cs" />
     <Compile Include="Works\ServerWork.cs" />
     <Page Include="Main.xaml">
@@ -150,6 +149,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\CloudDown.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Dex.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -187,9 +190,6 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\Dex.resx">
-      <DependentUpon>Dex.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\DataSources\System.Data.DataSet.datasource" />
     <None Include="Properties\Settings.settings">

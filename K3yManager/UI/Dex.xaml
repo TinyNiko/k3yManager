@@ -1,0 +1,32 @@
+﻿<Window x:Class="K3yManager.UI.Dex"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:K3yManager.UI"
+        mc:Ignorable="d"
+        Title="Dex" Height="601.579" Width="967.895" Drop="drop" DragEnter="dropEnter">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="323*"/>
+            <ColumnDefinition Width="63*"/>
+            <ColumnDefinition Width="574*"/>
+        </Grid.ColumnDefinitions>
+        <TreeView x:Name="treeView1" MouseDoubleClick="treeView1_MouseDoubleClick" HorizontalAlignment="Left" Height="517" Margin="0,44,0,0" VerticalAlignment="Top" Width="238"/>
+        <Menu x:Name="menu" HorizontalAlignment="Left" Height="39" VerticalAlignment="Top" Width="238"
+              FontSize="20">
+            <MenuItem Header="File">
+                <MenuItem Header="Open" Name="bn_Open" Click="bn_Open_Click"></MenuItem>
+                <MenuItem Header="Save" Name="bn_Save" Click="bn_Save_Click"></MenuItem>
+                <MenuItem Name="bn_Close" Header="Close" Click="bn_Close_Click"></MenuItem>
+                <MenuItem  Name="bn_CloseAll" Header="Close All" Click="bn_CloseAll_Click"></MenuItem>
+                <Separator />
+                <MenuItem Name="bn_Exit" Header="Exit" Click="bn_Exit_Click"></MenuItem>
+            </MenuItem>
+            <MenuItem Header="About" Name="bn_About" Click="bn_About_Click"></MenuItem>
+        </Menu>
+        <TabControl x:Name="tabControl1" HorizontalAlignment="Left" Height="548" Margin="243,23,0,0" VerticalAlignment="Top" Width="717" Grid.ColumnSpan="3">
+        </TabControl>
+
+    </Grid>
+</Window>

@@ -26,3 +26,5 @@ G:\code\windows\K3yManager\K3yManager\obj\Debug\UI\FileScan.g.cs
 G:\code\windows\K3yManager\K3yManager\obj\Debug\UI\FileScan.baml
 G:\code\windows\K3yManager\K3yManager\obj\Debug\UI\CloudDown.g.cs
 G:\code\windows\K3yManager\K3yManager\obj\Debug\UI\CloudDown.baml
+G:\code\windows\K3yManager\K3yManager\obj\Debug\UI\Dex.g.cs
+G:\code\windows\K3yManager\K3yManager\obj\Debug\UI\Dex.baml

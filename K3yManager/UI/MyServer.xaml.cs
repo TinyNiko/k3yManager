@@ -37,7 +37,7 @@ namespace K3yManager.UI
         {
             start.IsEnabled=false;
             Destext.Text = ""; 
-            sw.startListen(2333);
+            sw.startListen(8087);
             Destext.Text += "Starting Listening!!+\n";
             sw.Timer();
             sw.waitclient(Destext);              
@@ -64,6 +64,11 @@ namespace K3yManager.UI
         {
             string tt = sw.ShowInfo();
             Destext.Text += tt; 
+        }
+
+        private void bn_Ins_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

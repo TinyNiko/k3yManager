@@ -514,7 +514,7 @@ namespace K3yManager
             OpenFileDialog fileDialog = new OpenFileDialog();
             fileDialog.Multiselect = true;
             fileDialog.Title = "请选择文件";
-            fileDialog.Filter = "(*.*)|*.zip;*.apk";
+            fileDialog.Filter = "(*.*)|*.*";
             if (fileDialog.ShowDialog() == true)
             {
                 FilePath = fileDialog.FileName;
@@ -837,8 +837,9 @@ namespace K3yManager
 
         private void DEX_Click(object sender, RoutedEventArgs e)
         {
-            string filepath = ChoosedPath.Text; 
-
+            string filepath = ChoosedPath.Text;
+            Dex aa = new Dex(filepath);
+            aa.Show(); 
         }
     }
 

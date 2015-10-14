@@ -18,10 +18,11 @@ namespace K3yManager.DataDeal
         //add 0xxxx , 0xxxxx , 
         public string  dealhex(string src)
         {
-            if (iseven(src))
-                return null; 
-
+           
             string start = dealtrim(src);
+            if (iseven(start))
+                return null;
+
             string result = "0x";
             result += src[0]; 
 
@@ -54,25 +55,25 @@ namespace K3yManager.DataDeal
         {
             string start = dealtrim(src); 
             string result = null ;
-            string first = "payload=\"\"";
-            string second = "payload+=\"";
-            result += first;
-            for (int i = 0; i < start.Length - 2; i++)
+            string first = "payload=\"\"\n";
+            string second = "payload+=\"\\x";
+            result += first+second;
+            for (int i = 0; i < start.Length; i++)
             {
-                if (i % 2 == 0 &&i%20 != 0 )
+                if (i % 2 == 0 &&i%20 !=0)
                 {
                     result += "\\x";
                 }
-                result += start[i];
 
-                if(i%20 == 0)
+                if(i%20 == 0 && i!=0)
                 {
                     result += "\"\n" + second;
                 }
+                result += start[i];
 
             }
-            result += start[start.Length - 2];
-            result += start[start.Length - 1];
+            //result += start[start.Length - 2];
+            //result += start[start.Length - 1];
             result += "\"";
 
             return result; 
@@ -90,11 +91,12 @@ namespace K3yManager.DataDeal
         }
         public string dealhexstring(string src)
         {
-            if (iseven(src))
-                return null; 
+           
             string start = dealtrim(src);
+            if (iseven(start))
+                return null;
             string result = null;
-            for(int i =0; i <start.Length-2;i++)
+            for(int i =0; i <start.Length;i++)
             {
                 if(i% 2== 0 )
                 {
@@ -103,17 +105,18 @@ namespace K3yManager.DataDeal
                 result += start[i]; 
 
             }
-            result += start[start.Length - 2];
-            result += start[start.Length - 1];
+            //result += start[start.Length - 2];
+            //result += start[start.Length - 1];
 
             return result;
         }
 
         public string dealc(string src)
         {
-            if (iseven(src))
-                return null;
+           
             string start = dealtrim(src);
+            if (iseven(start))
+                return null;
             string result = null;
             string shell = "char shellcode[]=\"";
             result += shell; 
@@ -137,8 +140,7 @@ namespace K3yManager.DataDeal
 
         public string dealtrim(string src)
         {
-            if (iseven(src))
-                return null;
+           
 
             string result =null;
 
@@ -163,7 +165,8 @@ namespace K3yManager.DataDeal
                 }
 
             }
-
+            if (iseven(result))
+                return null;
             return result; 
         }
     }

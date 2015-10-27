@@ -8,13 +8,15 @@ using u2 = System.UInt16;
 using u1 = System.Char;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Windows;
+
 
 namespace K3yManager.Works
 {
     class DexWorks
     {
         private Eenclass enc = new Eenclass();
-        // ?no need 
+         
         private string[] header_real = new string[23]; 
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -47,6 +49,58 @@ namespace K3yManager.Works
             public uint data_off;
         }
 
+        public struct encode_field
+        {
+            // how to generate uleb128 use byte[]?
+            public uint filed_idx_diff;
+            public uint access_flag   ;
+        }
+
+        public struct encode_method
+        {
+            public uint  method_idx_diff;
+            public uint  access_flag;
+            public uint code_off;
+            
+        } 
+        public struct class_data_header
+        {
+            public uint size;
+            public class_data_item[] items ; 
+
+        }
+        public struct class_data_item
+        {
+            public uint static_size;
+            public uint instance_size;
+            public uint direct_size;
+            public uint virtual_size;
+            public encode_field[] static_field ;
+            public encode_field[] instance_field;
+            public encode_method[] direct_method; 
+            public encode_method[] virtual_method;
+        }
+
+        public struct code_item_header
+        {
+            public uint size ;
+            public code_item[] items ; 
+
+        }
+        public struct code_item
+        {
+            public ushort register_size;
+            public ushort arg_size;
+            public ushort out_size;
+            public ushort tries_size;
+            public uint debug_off;
+            public uint insns_size;
+            public ushort[] insns;
+            /*
+            public ushort padding
+            public try_items[] tries
+            public encode_catch_handler handler*/
+        }
         public struct maplist
         {
            public uint size;
@@ -70,8 +124,40 @@ namespace K3yManager.Works
 
         public struct strcontent
         {
+            public uint offset; 
             public uint len;
             public string content; 
+        }
+
+        public struct method_ids_item
+        {
+            public uint size;
+            public method_item[] methodlist;
+        }
+
+        public struct method_item
+        {
+            public ushort class_idx;
+            public ushort proto_idx;
+            public uint string_idx;
+        }
+        public struct Class_def_header
+        {
+            public uint size;
+            public Class_def_Item[] class_item;
+        }
+
+        public struct Class_def_Item
+        {
+            public uint class_idx;
+            public uint access_flags;
+            public uint superclass_dix;
+            public uint interfaces_off;
+            public uint source_file_idx;
+            public uint annotations_off;
+            public uint class_data_off; 
+            public uint static_value_off; 
+
         }
 
         
@@ -79,11 +165,15 @@ namespace K3yManager.Works
         private string path ;
         object structType = null;
         private header_item head;
-        public maplist Maplist; 
-
+        public maplist Maplist;
+        public string_ids_item String_item;
+        public method_ids_item method;
+        public Class_def_header class_defs;
+        public class_data_header class_data; 
+        
         public DexWorks(string path)
         {
-            if(path ==null)
+            if( path == null )
             {
                 return; 
             }
@@ -107,10 +197,169 @@ namespace K3yManager.Works
                 ByteArrayToStructure(src, ref structType, (int)head.map_off + 4+i*12);
                 Maplist.list[i] = (map_item)structType;
             }
-
-         
         }
 
+        public void AnaCode_off()
+        {
+
+        }
+
+        public void AnaClass_data()
+        {
+            class_data = new class_data_header();
+            class_data.size = class_defs.size;
+            class_data.items = new class_data_item[class_data.size];  
+            for(int i=0; i <class_data.size; ++i)
+            {
+                uint offset = class_defs.class_item[i].class_data_off;
+                offset=Anadata_size(i , offset);
+
+                class_data.items[i].direct_method = new encode_method[class_data.items[i].direct_size];
+                class_data.items[i].virtual_method= new encode_method[class_data.items[i].virtual_size];
+                class_data.items[i].instance_field = new encode_field[class_data.items[i].instance_size];
+                class_data.items[i].static_field= new encode_field[class_data.items[i].direct_size];
+
+
+                for (int x =0; x< class_data.items[i].static_size; ++x)
+                {
+                    uint dd = src[offset];
+                    offset=calcleb128(offset, ref dd);
+
+                    class_data.items[i].static_field[x].filed_idx_diff = dd;
+                    uint flags = src[offset];
+                    offset = calcleb128(offset, ref flags);
+                    class_data.items[i].static_field[x].access_flag = flags; 
+                }
+                for (int x = 0; x < class_data.items[i].instance_size; ++x)
+                {
+                    uint dd = src[offset];
+                    offset = calcleb128(offset, ref dd);
+
+                    class_data.items[i].instance_field[x].filed_idx_diff = dd;
+                    uint flags = src[offset];
+                    offset = calcleb128(offset, ref flags);
+                    class_data.items[i].instance_field[x].access_flag = flags;
+                }
+                for (int x = 0; x < class_data.items[i].direct_size; ++x)
+                {
+                    uint dd = src[offset];
+                    offset = calcleb128(offset, ref dd);
+
+                    class_data.items[i].direct_method[x].method_idx_diff = dd;
+                    uint flags = src[offset];
+                    offset = calcleb128(offset, ref flags);
+                    class_data.items[i].direct_method[x].access_flag = flags;
+                    uint code_off = src[offset];
+                    offset = calcleb128(offset, ref code_off);
+                    class_data.items[i].direct_method[x].code_off = code_off; 
+                }
+                for (int x = 0; x < class_data.items[i].virtual_size; ++x)
+                {
+                    uint dd = src[offset];
+                    offset = calcleb128(offset, ref dd);
+
+                    class_data.items[i].virtual_method[x].method_idx_diff = dd;
+                    uint flags = src[offset];
+                    offset = calcleb128(offset, ref flags);
+                    class_data.items[i].virtual_method[x].access_flag = flags;
+                    uint code_off = src[offset];
+                    offset = calcleb128(offset, ref code_off);
+                    class_data.items[i].virtual_method[x].code_off = code_off;
+                }
+
+            }
+        }
+        private uint calcleb128(uint offset , ref uint  dd)
+        {
+            if (((dd & 0xff) > 0x7f))
+            {
+                if ((dd & 0xff00) > 0x7f00)
+                {
+                    if ((dd &0xff0000)>0x7f0000)
+                    {
+                        if((dd &0xff000000)> 0x7f000000)
+                        {
+                            offset += 5; 
+                        }
+                        offset += 4;
+                        dd = (dd & 0x7f) | ((dd & 0xff00) >> 1) | ((dd & 0xff0000) >> 1) | ((dd & 0xff000000) >> 1); 
+                    }
+                    offset += 3;
+                    dd = (dd & 0x7f) | ((dd & 0xff00) >> 1) | ((dd & 0xff0000) >> 1) ; 
+                }
+                offset += 2;
+                // 2zijie 
+                dd = (dd & 0x7f) | ((dd & 0xff00) >> 1); 
+            }
+
+            offset += 1; 
+
+            return offset; 
+        }
+        private uint  Anadata_size(int i ,uint offset)
+        {
+            uint tmpoffset = 0; 
+            uint usize = 0; 
+            uint static_size = src[offset]; 
+            if((static_size & 0xff) > 0x7f)
+            {
+                static_size &= 0xffff;
+                usize = 1; 
+            }
+            tmpoffset = offset + 1 + usize; 
+            uint instance_size = src[tmpoffset]; 
+            if((instance_size &0xff) >0x7f)
+            {
+                instance_size &= 0xffff;
+                usize = 1; 
+            }
+            tmpoffset = tmpoffset + 1 + usize;
+            uint direct_size = src[tmpoffset]; 
+            if((direct_size&0xff) >0x7f)
+            {
+                direct_size &= 0xffff;
+                usize = 1; 
+            }
+            tmpoffset = tmpoffset + 1 + usize; 
+            uint virtual_size = src[tmpoffset];
+            if((virtual_size &0xff) >0x7f)
+            {
+                virtual_size &= 0xffff;
+                usize = 1; 
+            }
+
+            tmpoffset = tmpoffset + 1 + usize; 
+
+            class_data.items[i].instance_size = instance_size;
+            class_data.items[i].static_size = static_size;
+            class_data.items[i].virtual_size = virtual_size;
+            class_data.items[i].direct_size = direct_size;
+
+            return tmpoffset; 
+        }
+
+
+        private int checkuleb128(byte src)
+        {
+            //TODO checksize ;
+            return 0;
+        }
+        public void AnaClass_defs()
+        {
+            uint offset = 0;
+            uint size = 0;
+            findoffandsize(ref offset, ref size, 0x0006);
+            class_defs = new Class_def_header();
+            class_defs.size = size;
+            class_defs.class_item = new Class_def_Item[size];
+            for (int i = 0; i < size; ++i)
+            {
+                structType = class_defs.class_item[i];
+                ByteArrayToStructure(src, ref structType, (int)head.class_defs_off + i * 28);
+                class_defs.class_item[i] = (Class_def_Item)structType ;
+            }
+        }
+        
         private void findoffandsize(ref uint offset , ref uint size,uint type)
         {
             for (int i = 0; i < Maplist.size; i++)
@@ -122,15 +371,62 @@ namespace K3yManager.Works
                 }
             }
         }
+
+        private void AnaProtooff()
+        { }
+
+        private void AnaFieldoff()
+        { }
+
+        public void AnaTypeoff()
+        {
+
+        }
+
+        public void AnaMethodoff()
+        {
+            uint offset = 0;
+            uint size = 0;
+            findoffandsize( ref offset,ref size, 0x0005);
+            method = new method_ids_item();
+            method.size = size;
+            method.methodlist = new method_item[size];
+            for (int i = 0; i < size; ++i)
+            {
+                structType = method.methodlist[i];
+                ByteArrayToStructure(src, ref structType, (int)head.method_ids_off  + i * 8);
+                method.methodlist[i] = (method_item)structType;
+            }
+
+        }
         public void AnaStringoff()
         {
             uint offset = 0;
             uint items = 0;
-            findoffandsize(ref offset, ref items, 0x0001); 
+            findoffandsize(ref offset, ref items, 0x0001);
+            String_item = new string_ids_item();
+            String_item.size = items; 
+            String_item.strlist = new strcontent[items]; 
             for (int i = 0; i <items; i++)
             {
                 uint string_off = (uint)src[offset + i * 4];
-                 
+                uint size = (uint)src[string_off] & 0xff; 
+                if(size > 0x7f)
+                {
+                    MessageBox.Show("Size is bigger than 0x7F"); 
+                    //deal size ;                    
+                }
+                else
+                {
+                    byte[] xx = new byte[size]; 
+                    for(int j=0; j <size; ++j)
+                    {
+                        xx[j] = src[string_off + 1];
+                    }
+                    String_item.strlist[i].content = Encoding.UTF8.GetString(xx);
+                }
+                String_item.strlist[i].len = size;
+                String_item.strlist[i].offset = offset; 
             }
 
         }
@@ -205,4 +501,34 @@ namespace K3yManager.Works
         }
 
     }
+
+
+
+    /*
+    DEX_INLINE int readUnsignedLeb128(const u1** pStream) {
+    const u1* ptr = *pStream;
+    int result = *(ptr++);
+    if (result > 0x7f) {
+        int cur = *(ptr++);
+        result = (result & 0x7f) | ((cur & 0x7f) << 7);
+        if (cur > 0x7f) {
+            cur = *(ptr++);
+            result |= (cur & 0x7f) << 14;
+            if (cur > 0x7f) {
+                cur = *(ptr++);
+                result |= (cur & 0x7f) << 21;
+                if (cur > 0x7f) {
+              
+                    cur = *(ptr++);
+                    result |= cur << 28;
+                }
+            }
+        }
+    }
+
+    * pStream = ptr;
+    return result;
+}
+
+    */
 }

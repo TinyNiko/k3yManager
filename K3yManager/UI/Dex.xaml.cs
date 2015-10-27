@@ -20,7 +20,8 @@ namespace K3yManager.UI
         private string[] header_tmp = null;
         
         List<string> pathlist = new List<string>();
-        Hashtable allhash = new Hashtable(); 
+        Hashtable allhash = new Hashtable();
+        string[] string_off_str = { "index", "offset", "size", "content" };
         string[] namearray = { "Name","magic", "checksum","sig","file_size" , "header_size" , "endan_tag","link_size",
         "link_off","map_off","string_ids_size","string_off" , "type_size","type_off","proto_size","proto_off" ,
         "field_size" , "field_off" , "method_size","method_off","class_size","class_off","data_size","data_off"};
@@ -77,14 +78,27 @@ namespace K3yManager.UI
             TreeViewItem node04 = new TreeViewItem();
             node04.Header = "fieldoff";
             TreeViewItem node05 = new TreeViewItem();
-            node05.Header = "dataoff";
+            node05.Header = "methodoff";
             TreeViewItem node011 = new TreeViewItem();
-            node05.Header = "mapoff";
+            node011.Header = "mapoff";
+   
             node.Items.Add(node01);
             node.Items.Add(node02);
             node.Items.Add(node03);
             node.Items.Add(node04);
             node.Items.Add(node05);
+            node.Items.Add(node011);
+
+            TreeViewItem cnode1 = new TreeViewItem();
+            cnode1.Header = "class_defs";
+            TreeViewItem cnode12 = new TreeViewItem();
+            cnode12.Header = "class_data";
+            node2.Items.Add(cnode1); 
+            node2.Items.Add(cnode12);
+
+
+
+
         }
 
         private void AddTabPage(string path)
@@ -200,7 +214,7 @@ namespace K3yManager.UI
             }
             else if(xx == MessageBoxResult.Yes)
             {
-                //Save()
+                //
             }
             else
             {
@@ -314,20 +328,62 @@ namespace K3yManager.UI
                     xx.Content = hash["fieldoff"];
                 }
             }
-            else if (cc == "dataoff")
+            else if (cc == "methodoff")
             {
-                if (!hash.Contains("dataoff"))
+                if (!hash.Contains("methodoff"))
                 {
-                    AddDataoff(tabControl1.SelectedItem);
+                    AddMethodoff(tabControl1.SelectedItem);
                 }
                 else
                 {
                     TabItem xx = (TabItem)tabControl1.SelectedItem;
-                    xx.Content = hash["dataoff"];
+                    xx.Content = hash["methodoff"];
                 }
+            }
+            else if (cc == "class_defs")
+            {
+                if (!hash.Contains("class_defs"))
+                {
+                    AddClass_defs(tabControl1.SelectedItem);
+                }
+                else
+                {
+                    TabItem xx = (TabItem)tabControl1.SelectedItem;
+                    xx.Content = hash["class_defs"];
+                }
+
+            }
+            else if (cc == "class_data")
+            {
+                if (!hash.Contains("class_data"))
+                {
+                    AddClass_data(tabControl1.SelectedItem);
+                }
+                else
+                {
+                    TabItem xx = (TabItem)tabControl1.SelectedItem;
+                    xx.Content = hash["class_data"];
+                }
+
             }
         }
 
+        private void AddClass_data(object now)
+        {
+            TabItem nowx = (TabItem)now;
+
+            StackPanel sp = new StackPanel();
+            sp.Orientation = Orientation.Vertical;
+            sp.HorizontalAlignment = HorizontalAlignment.Center;
+            CreateClass_dataView(sp);
+            nowx.Content = sp;
+            hash.Add("class_data", sp);
+        }
+
+        private void CreateClass_dataView( StackPanel sp)
+        {
+            dw.AnaClass_data(); 
+        }
         private void AddMapoff(object now)
         {
             TabItem nowx = (TabItem)now;
@@ -335,13 +391,13 @@ namespace K3yManager.UI
             StackPanel sp = new StackPanel();
             sp.Orientation = Orientation.Vertical;
             sp.HorizontalAlignment = HorizontalAlignment.Center;
-            CreateMapoff(sp); 
+            CreateMapoffView(sp); 
             nowx.Content = sp; 
             hash.Add("mapoff" ,sp); 
 
         }
 
-        private void CreateMapoff(StackPanel sp)
+        private void CreateMapoffView(StackPanel sp)
         {
             int map_off = Int32.Parse(header_tmp[8], System.Globalization.NumberStyles.HexNumber) + 4;
             dw.AnaMapoff();
@@ -382,12 +438,36 @@ namespace K3yManager.UI
                 sp.Children.Add(s);
             }
         }
-        private void AddDataoff(object now)
+
+
+        private void AddClass_defs(object now)
         {
             TabItem nowx = (TabItem)now;
+            StackPanel sp = new StackPanel();
+            sp.Orientation = Orientation.Vertical;
+            sp.HorizontalAlignment = HorizontalAlignment.Center;
+            CreateClass_defs(sp);
+            nowx.Content = sp;
+            hash.Add("methodoff", sp);
+        }
+        private void CreateClass_defs(StackPanel sp)
+        {
+            dw.AnaClass_defs();
+        }
 
-
-
+        private void AddMethodoff(object now)
+        {
+            TabItem nowx = (TabItem)now;
+            StackPanel sp = new StackPanel();
+            sp.Orientation = Orientation.Vertical;
+            sp.HorizontalAlignment = HorizontalAlignment.Center;
+            CreateMethodoffView(sp);
+            nowx.Content = sp;
+            hash.Add("methodoff", sp);
+        }
+        private void  CreateMethodoffView(StackPanel sp)
+        {
+            dw.AnaMethodoff(); 
         }
         private void AddStringoff(object now)
         {
@@ -395,31 +475,99 @@ namespace K3yManager.UI
             StackPanel sp = new StackPanel();
             sp.Orientation = Orientation.Vertical;
             sp.HorizontalAlignment = HorizontalAlignment.Center;
-            CreateMapoff(sp);
+            CreateStringoffView(sp);
             nowx.Content = sp;
             hash.Add("stringoff", sp);
         }
+        private void CreateStringoffView(StackPanel sp)
+        {
+            dw.AnaStringoff();
+            int len = (int)dw.String_item.size; 
+            for (int i = 0; i <= len; i++)
+            {
+                StackPanel s = new StackPanel();
+                s.Orientation = Orientation.Horizontal;
+                s.Height = 20;
+                Button Index = new Button();
+                Index.Width = 100;
+                Button Offset = new Button();
+                Offset.Width = 130;
+                Button Size = new Button();
+                Size.Width = 100;
+                if (i == 0)
+                {
+                    Offset.Content = "Offset";
+                    Index.Content = "Index";
+                    Size.Content = "Size";
+                    Button Stringline = new Button();
+                    Stringline.Width = 100;
+                    Stringline.Content = "Content";
+                    s.Children.Add(Index);
+                    s.Children.Add(Offset);
+                    s.Children.Add(Size);
+                    s.Children.Add(Stringline);
+                }
+                else
+                {
+                    TextBox tb = new TextBox();
+                    tb.Width = 100;
+                    tb.FontSize = 15;
+                    Index.Content = i;
+                    Offset.Content = dw.String_item.strlist[i].offset;
+                    Size.Content = dw.String_item.strlist[i].len;
+                    tb.Text = dw.String_item.strlist[i].content;
+                    s.Children.Add(Index);
+                    s.Children.Add(Offset);
+                    s.Children.Add(Size);
+                    s.Children.Add(tb);
+                }
+
+                sp.Children.Add(s);
+            }
+        } 
 
         private void AddFieldoff(object now)
         {
             TabItem nowx = (TabItem)now;
-
+            StackPanel sp = new StackPanel();
+            sp.Orientation = Orientation.Vertical;
+            sp.HorizontalAlignment = HorizontalAlignment.Center;
+            CreateStringoffView(sp);
+            nowx.Content = sp;
+            hash.Add("fieldoff", sp);
 
 
         }
+        private void CreateFieldoff(StackPanel sp)
+        { }
         private void AddTypeoff(object now)
         {
             TabItem nowx = (TabItem)now;
-
+            StackPanel sp = new StackPanel();
+            sp.Orientation = Orientation.Vertical;
+            sp.HorizontalAlignment = HorizontalAlignment.Center;
+            CreateStringoffView(sp);
+            nowx.Content = sp;
+            hash.Add("typeof", sp);
 
 
         }
+        private void CreateTypeoff(StackPanel sp)
+        { }
         private void AddProtooff(object now)
         {
             TabItem nowx = (TabItem)now;
-
+            StackPanel sp = new StackPanel();
+            sp.Orientation = Orientation.Vertical;
+            sp.HorizontalAlignment = HorizontalAlignment.Center;
+            CreateStringoffView(sp);
+            nowx.Content = sp;
+            hash.Add("protooff", sp);
 
 
         }
+
+        private void CreateProtooff(StackPanel sp)
+        { }
     }
 }

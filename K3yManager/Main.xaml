@@ -18,10 +18,10 @@
                 <Button Name="Query" Click="query_Click" Content="query" HorizontalAlignment="Left" Margin="99,238,0,0" VerticalAlignment="Top" Width="75" Grid.ColumnSpan="2"/>
                 <Button Name="delete" Click="delete_Click" Content="delete" HorizontalAlignment="Right" Margin="0,236,224,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.027,0.684" Grid.Column="2"/>
                 <TextBox Name="TAG" HorizontalAlignment="Left" Height="23" Margin="96,22,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.Column="1" Grid.ColumnSpan="2"/>
-                <TextBox Name="COUNT"  HorizontalAlignment="Left" Height="23" Margin="96,65,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120" Grid.Column="1" Grid.ColumnSpan="2"/>
+                <TextBox Name="COUNT"  HorizontalAlignment="Left" Height="23" Margin="96,65,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="141" Grid.Column="1" Grid.ColumnSpan="2"/>
                 <Button Name="weather" Click="weather_Click" Content="Weather" HorizontalAlignment="Left" Margin="181,236,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.587,4.895" Grid.Column="2"/>
                 <Calendar Name="MC" HorizontalAlignment="Left" Margin="191,1,0,0" VerticalAlignment="Top" Grid.Column="2"/>
-                <TextBox Name="KEY" HorizontalAlignment="Left" Height="23" Margin="96,117,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120" Grid.Column="1" Grid.ColumnSpan="2"/>
+                <TextBox Name="KEY" HorizontalAlignment="Left" Height="23" Margin="96,117,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="141" Grid.Column="1" Grid.ColumnSpan="2"/>
                 <ComboBox Name="COMBOBOX" HorizontalAlignment="Left" Margin="96,199,0,0" VerticalAlignment="Top" Width="120" Grid.Column="1"  Grid.ColumnSpan="2"/>
                 <Label Content="TAG" HorizontalAlignment="Left" Margin="99,22,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
                 <Label Content="COUNT" HorizontalAlignment="Left" Margin="99,65,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
@@ -109,6 +109,7 @@
                     <Button x:Name="ODEX" Content="ODEX" Width="100" HorizontalAlignment="Center" Margin="20"/>
                     <Button Name="DEX"  Click="DEX_Click" Content="DEX" Width="100" HorizontalAlignment="Center" Margin="20"></Button>
                     <Button Name="ELF" Content="ELF" Width="100" HorizontalAlignment="Center" Margin="20"></Button>
+                    <Button x:Name="APK" Click="APK_Click" Content="Apk_shell" Width="70" Height="20"/>
                 </StackPanel>
 
             </StackPanel>

@@ -12,5 +12,7 @@ def GenPassword(length):
     genPwd = ''.join(myall) 
     return genPwd
 
+
 if __name__ == '__main__':
     print GenPassword(16)
+    

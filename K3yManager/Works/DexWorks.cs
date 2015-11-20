@@ -16,14 +16,14 @@ namespace K3yManager.Works
     class DexWorks
     {
         private Eenclass enc = new Eenclass();
-         
-        private string[] header_real = new string[23]; 
+
+        private string[] header_real = new string[23];
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct header_item
         {
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
-            public byte[] magic  ;
+            public byte[] magic;
             public uint checksum;
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 20)]
             public byte[] siganature;
@@ -40,7 +40,7 @@ namespace K3yManager.Works
             public uint proto_ids_size;
             public uint proto_ids_off;
             public uint field_ids_size;
-            public uint field_ids_off; 
+            public uint field_ids_off;
             public uint method_ids_size;
             public uint method_ids_off;
             public uint class_defs_size;
@@ -53,20 +53,20 @@ namespace K3yManager.Works
         {
             // how to generate uleb128 use byte[]?
             public uint filed_idx_diff;
-            public uint access_flag   ;
+            public uint access_flag;
         }
 
         public struct encode_method
         {
-            public uint  method_idx_diff;
-            public uint  access_flag;
+            public uint method_idx_diff;
+            public uint access_flag;
             public uint code_off;
-            
-        } 
+
+        }
         public struct class_data_header
         {
             public uint size;
-            public class_data_item[] items ; 
+            public class_data_item[] items;
 
         }
         public struct class_data_item
@@ -75,16 +75,16 @@ namespace K3yManager.Works
             public uint instance_size;
             public uint direct_size;
             public uint virtual_size;
-            public encode_field[] static_field ;
+            public encode_field[] static_field;
             public encode_field[] instance_field;
-            public encode_method[] direct_method; 
+            public encode_method[] direct_method;
             public encode_method[] virtual_method;
         }
 
         public struct code_item_header
         {
-            public uint size ;
-            public code_item[] items ; 
+            public uint size;
+            public code_item[] items;
 
         }
         public struct code_item
@@ -103,30 +103,30 @@ namespace K3yManager.Works
         }
         public struct maplist
         {
-           public uint size;
-           public map_item[] list; 
+            public uint size;
+            public map_item[] list;
         }
 
         public struct map_item
         {
-          public  ushort type;
-          public  ushort unuse;
-          public  uint size;
-          public  uint offset; 
+            public ushort type;
+            public ushort unuse;
+            public uint size;
+            public uint offset;
         }
 
 
         public struct string_ids_item
         {
             public uint size;
-            public strcontent[] strlist;  
-        } 
+            public strcontent[] strlist;
+        }
 
         public struct strcontent
         {
-            public uint offset; 
+            public uint offset;
             public uint len;
-            public string content; 
+            public string content;
         }
 
         public struct method_ids_item
@@ -155,52 +155,104 @@ namespace K3yManager.Works
             public uint interfaces_off;
             public uint source_file_idx;
             public uint annotations_off;
-            public uint class_data_off; 
-            public uint static_value_off; 
+            public uint class_data_off;
+            public uint static_value_off;
 
         }
 
-        
-        private byte[] src  ; 
-        private string path ;
+
+        private byte[] src;
+        private string path;
         object structType = null;
         private header_item head;
         public maplist Maplist;
         public string_ids_item String_item;
         public method_ids_item method;
         public Class_def_header class_defs;
-        public class_data_header class_data; 
-        
+        public class_data_header class_data;
+        public code_item_header code_header;
+
         public DexWorks(string path)
         {
-            if( path == null )
+            if (path == null)
             {
-                return; 
+                return;
             }
             this.path = path;
             FileStream fs = new FileStream(path, FileMode.Open);
-            src= new byte[fs.Length];
+            src = new byte[fs.Length];
             fs.Read(src, 0, src.Length);
-            fs.Close(); 
+            fs.Close();
         }
 
         public void AnaMapoff()
         {
-            int size = src[head.map_off]; 
-           
+            int size = src[head.map_off];
+
             Maplist = new maplist();
-            Maplist.size = (uint)size; 
+            Maplist.size = (uint)size;
             Maplist.list = new map_item[size];
             for (int i = 0; i < size; ++i)
             {
-                structType = Maplist.list[i]; 
-                ByteArrayToStructure(src, ref structType, (int)head.map_off + 4+i*12);
+                structType = Maplist.list[i];
+                ByteArrayToStructure(src, ref structType, (int)head.map_off + 4 + i * 12);
                 Maplist.list[i] = (map_item)structType;
             }
         }
 
         public void AnaCode_off()
         {
+            uint tmpnum = 0; 
+            uint num = 0;
+            for (int i = 0; i < class_data.size; ++i)
+            {
+                num += class_data.items[i].direct_size + class_data.items[i].virtual_size;
+            }
+            code_header = new code_item_header();
+            code_header.size = num;
+            code_header.items = new code_item[num];
+            for(int i = 0; i <class_data.size; ++i)
+            {
+                if(class_data.items[i].direct_size!=0)
+                {
+                    for(int k = 0; k < class_data.items[i].direct_size; ++k)
+                    {
+                        uint code = class_data.items[i].direct_method[k].code_off;
+                        code_header.items[tmpnum].register_size = BitConverter.ToUInt16(src, (int)code);
+                        code_header.items[tmpnum].arg_size = BitConverter.ToUInt16(src, (int)code +2);
+                        code_header.items[tmpnum].out_size = BitConverter.ToUInt16(src, (int)code +4);
+                        code_header.items[tmpnum].tries_size = BitConverter.ToUInt16(src, (int)code + 6);
+                        code_header.items[tmpnum].debug_off = BitConverter.ToUInt32(src, (int)code + 8);
+                        code_header.items[tmpnum].insns_size = BitConverter.ToUInt32(src, (int)code + 12);
+                        code_header.items[tmpnum].insns = new ushort[code_header.items[tmpnum].insns_size];
+                        for(int t =0;  t <code_header.items[tmpnum].insns_size ; t++)
+                        {
+                            code_header.items[tmpnum].insns[t] = BitConverter.ToUInt16(  src, (int)code + 16+ t * 2); 
+                        }
+                        tmpnum++; 
+                    }
+                }
+
+                if(class_data.items[i].virtual_size!=0)
+                {
+                    for(int k =0;  k<class_data.items[i].virtual_size; ++k)
+                    {
+                        uint code = class_data.items[i].virtual_method[k].code_off;
+                        code_header.items[tmpnum].register_size = src[code];
+                        code_header.items[tmpnum].arg_size = src[code + 2];
+                        code_header.items[tmpnum].out_size = src[code + 4];
+                        code_header.items[tmpnum].tries_size = src[code + 6];
+                        code_header.items[tmpnum].debug_off = src[code + 8];
+                        code_header.items[tmpnum].insns_size = src[code + 12];
+                        code_header.items[tmpnum].insns = new ushort[code_header.items[tmpnum].insns_size];
+                        for (int t = 0; t < code_header.items[k].insns_size; t++)
+                        {
+                            code_header.items[tmpnum].insns[t] = src[code + 16 + t * 2];
+                        }
+                        tmpnum++; 
+                    }
+                }
+            }
 
         }
 
@@ -242,14 +294,14 @@ namespace K3yManager.Works
                 }
                 for (int x = 0; x < class_data.items[i].direct_size; ++x)
                 {
-                    uint dd = src[offset];
+                    uint dd = BitConverter.ToUInt32(src, (int)offset); 
                     offset = calcleb128(offset, ref dd);
 
                     class_data.items[i].direct_method[x].method_idx_diff = dd;
-                    uint flags = src[offset];
+                    uint flags = BitConverter.ToUInt32(src, (int)offset);
                     offset = calcleb128(offset, ref flags);
                     class_data.items[i].direct_method[x].access_flag = flags;
-                    uint code_off = src[offset];
+                    uint code_off = BitConverter.ToUInt32(src, (int)offset);
                     offset = calcleb128(offset, ref code_off);
                     class_data.items[i].direct_method[x].code_off = code_off; 
                 }
@@ -279,19 +331,26 @@ namespace K3yManager.Works
                     {
                         if((dd &0xff000000)> 0x7f000000)
                         {
-                            offset += 5; 
+                            offset += 5;
+                            return offset;
                         }
                         offset += 4;
-                        dd = (dd & 0x7f) | ((dd & 0xff00) >> 1) | ((dd & 0xff0000) >> 1) | ((dd & 0xff000000) >> 1); 
+                       
+                        dd = (dd & 0x7f) | ((dd & 0x7f00) >> 1) | ((dd & 0x7f0000) >> 2) | ((dd & 0x7f000000) >> 3);
+                        return offset;
                     }
                     offset += 3;
-                    dd = (dd & 0x7f) | ((dd & 0xff00) >> 1) | ((dd & 0xff0000) >> 1) ; 
+                    dd = dd & 0xffffff;
+                    dd = (dd & 0x7f) | ((dd & 0x7f00) >> 1) | ((dd & 0x7f0000) >> 2);
+                    return offset;
                 }
                 offset += 2;
                 // 2zijie 
-                dd = (dd & 0x7f) | ((dd & 0xff00) >> 1); 
+                dd = dd & 0xffff; 
+                dd = (dd & 0x7f) | ((dd & 0x7f00) >> 1);
+                return offset; 
             }
-
+            dd = dd & 0x7f; 
             offset += 1; 
 
             return offset; 

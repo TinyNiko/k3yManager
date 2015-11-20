@@ -93,8 +93,11 @@ namespace K3yManager.UI
             cnode1.Header = "class_defs";
             TreeViewItem cnode12 = new TreeViewItem();
             cnode12.Header = "class_data";
+            TreeViewItem cnode13 = new TreeViewItem();
+            cnode13.Header = "code_off";
             node2.Items.Add(cnode1); 
             node2.Items.Add(cnode12);
+            node2.Items.Add(cnode13); 
 
 
 
@@ -256,6 +259,10 @@ namespace K3yManager.UI
         private void treeView1_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             TreeViewItem dd= (TreeViewItem)treeView1.SelectedItem;
+            if(dd==null)
+            {
+                return; 
+            }
             string cc = (string)dd.Header; 
             if (cc == "DexFile")
             {
@@ -366,6 +373,37 @@ namespace K3yManager.UI
                 }
 
             }
+            else if (cc == "code_off")
+            {
+                if (!hash.Contains("code_off"))
+                {
+                    AddCode_off(tabControl1.SelectedItem);
+                }
+                else
+                {
+                    TabItem xx = (TabItem)tabControl1.SelectedItem;
+                    xx.Content = hash["code_off"];
+                }
+
+            }
+        }
+
+
+
+        private void CreateCode_offView(StackPanel sp)
+        {
+            dw.AnaCode_off(); 
+        }
+        private void AddCode_off(object now)
+        {
+            TabItem nowx = (TabItem)now;
+
+            StackPanel sp = new StackPanel();
+            sp.Orientation = Orientation.Vertical;
+            sp.HorizontalAlignment = HorizontalAlignment.Center;
+            CreateCode_offView(sp);
+            nowx.Content = sp;
+            hash.Add("code_off", sp);
         }
 
         private void AddClass_data(object now)
@@ -448,7 +486,7 @@ namespace K3yManager.UI
             sp.HorizontalAlignment = HorizontalAlignment.Center;
             CreateClass_defs(sp);
             nowx.Content = sp;
-            hash.Add("methodoff", sp);
+            hash.Add("class_defs", sp); 
         }
         private void CreateClass_defs(StackPanel sp)
         {

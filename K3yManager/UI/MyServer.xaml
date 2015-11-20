@@ -14,6 +14,7 @@
         </Grid.ColumnDefinitions>
         <Button   Name="start" Click="start_Click" Content="start" HorizontalAlignment="Left" Margin="363,23,0,0" VerticalAlignment="Top" Width="75" Grid.Column="2" />
         <TextBox  Name="Srctext"  HorizontalAlignment="Left"  Height="83" 
+                  KeyDown="Srctext_KeyDown"
                           AcceptsReturn="True" TextWrapping="Wrap" VerticalAlignment="Top" Width="382" Grid.ColumnSpan="3">
 
         </TextBox>
@@ -26,6 +27,6 @@
         <Button x:Name="bn_stop" Click="bn_stop_Click"   Content="stop" Grid.Column="2" HorizontalAlignment="Left" Margin="363,69,0,0" VerticalAlignment="Top" Width="75"/>
         <Button x:Name="bn_client" Click="bn_client_Click" Content="client" Grid.Column="2" HorizontalAlignment="Left" Margin="552,23,0,0" VerticalAlignment="Top" Width="75"/>
         <Button x:Name="bn_info" Click="bn_info_Click_1" Content="Info"  Grid.Column="2" HorizontalAlignment="Left" Margin="552,69,0,0" VerticalAlignment="Top" Width="75"/>
-        <Button x:Name="bn_Ins" Content="Ins" Click="bn_Ins_Click" Grid.Column="2" HorizontalAlignment="Left" Margin="363,117,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button x:Name="bn_Ins" Content="Send Ins" Click="bn_Ins_Click" Grid.Column="2" HorizontalAlignment="Left" Margin="363,117,0,0" VerticalAlignment="Top" Width="75"/>
     </Grid>
 </Window>

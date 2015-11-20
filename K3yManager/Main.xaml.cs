@@ -159,14 +159,17 @@ namespace K3yManager
                 }
                 return;
             }
+
             Aworks aw = new Aworks();
-            if (con.GetValue("sig").Equals("true"))
+
+           /* if (con.GetValue("sig").Equals("true"))
             {
                 if (!aw.Verify("message.xml"))
                 {
                     this.Close();
                 }
             }
+            */
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.Load("message.xml");
             XmlNode root = xmlDoc.SelectSingleNode("ALLUSER");
@@ -475,7 +478,10 @@ namespace K3yManager
             string depass = Encoding.Default.GetString(de.decaes(binuser, sec));
             string deuser = Encoding.Default.GetString(de.decaes(binpass, sec));
             string message = String.Format(show[1], tag, deuser, depass);
-            MessageBox.Show(message, "MESSAGE", MessageBoxButton.OK);
+            COUNT.Text = deuser;
+            TAG.Text = tag;
+            KEY.Text = depass; 
+            //MessageBox.Show(message, "MESSAGE", MessageBoxButton.OK);
         }
 
         private void logout_Click(object sender, RoutedEventArgs e)
@@ -840,6 +846,21 @@ namespace K3yManager
             string filepath = ChoosedPath.Text;
             Dex aa = new Dex(filepath);
             aa.Show(); 
+        }
+
+        private void APK_Click(object sender, RoutedEventArgs e)
+        {
+            string filepath = ChoosedPath.Text;
+            ApkWork apkshell = new ApkWork(filepath);
+           int i =  apkshell.encapk();
+            if (i == 0)
+            {
+                MessageBox.Show("ok"); 
+            }
+            else
+            {
+                MessageBox.Show("Error");
+            }
         }
     }
 

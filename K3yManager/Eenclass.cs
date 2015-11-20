@@ -62,10 +62,17 @@ namespace K3yManager
         private byte[] checkaeskey(byte[] key)
         {
             byte[] newkey = new byte[16];
-            Array.Copy(key,newkey, newkey.Length);
-            for (int i = key.Length; i < 16; i++)
+            if (key.Length > 16)
             {
-                newkey[i] = 0x61;
+                Array.Copy(key, newkey, 16);
+            }
+            else
+            {
+                Array.Copy(key, newkey, key.Length);
+                for (int i = key.Length; i < 16; i++)
+                {
+                    newkey[i] = 0x61;
+                }
             }
 
             return newkey;
@@ -163,12 +170,20 @@ namespace K3yManager
         private byte[] checkdeskey(byte[] key)
         {
             byte[] newkey = new byte[8];
-            Array.Copy(key,newkey,8);
-            for (int i = key.Length; i < 8; i++)
+            if (key.Length > 8)
             {
-                newkey[i] = 0x61;
-            }
 
+
+                Array.Copy(key, newkey, 8);
+            }
+            else
+            {
+                Array.Copy(key, newkey, key.Length);
+                for (int i = key.Length; i < 8; i++)
+                {
+                    newkey[i] = 0x61;
+                }
+            }
             return newkey;
         }
 

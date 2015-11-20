@@ -1,21 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace K3yManager.Works
 {
+
+
     public class ServerWork
     {
         System.Diagnostics.Stopwatch stopwatch = null; 
         public string pingstr;
-        private Socket s;
-        private List<String> clientip = new List<string>(); 
+        private static Socket s;
+        private Socket clientSocket; 
+        private static List<Socket> clientip = new List<Socket>(); 
         public string MyPing()
         {
             string ip1 = getIP();
@@ -30,7 +36,9 @@ namespace K3yManager.Works
             }
             return pingstr; 
         }
+     
 
+    
         private string getIP()
         {
             string hostname = Dns.GetHostName();
@@ -52,7 +60,7 @@ namespace K3yManager.Works
 
         }
 
-        public void startListen(int port)
+        public void startListen(int port ,TextBox ttx) 
         {
             try
             {
@@ -62,7 +70,8 @@ namespace K3yManager.Works
 
                 s = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 s.Bind(ipe);
-                s.Listen(20); 
+                s.Listen(20);
+              
                    
             }
             catch(Exception )
@@ -70,18 +79,104 @@ namespace K3yManager.Works
 
             }
         }
-
-        public void waitclient(TextBox tt)
+        public  string  waitclient()
         {
-            while (true)
-            {
-                Socket client = s.Accept();
-                tt.Text += "[*Connection] " + client.RemoteEndPoint.ToString();
-                clientip.Add(client.RemoteEndPoint.ToString()); 
-              
-            }
+            Socket client = s.Accept();
+            string aa = "[*Connection] " + client.RemoteEndPoint.ToString();
+            clientip.Add(client);
+            return aa; 
         }
 
+        public void dealclient()
+        {
+            byte[] buff = new byte[1024];
+            Socket client = clientip.Last();
+            client.Receive(buff);
+            string aa = Encoding.UTF8.GetString(buff);
+            MessageBox.Show(aa);
+        }
+
+        public int  sendfile(string filepath)
+        {
+            if(clientSocket==null)
+            {
+                return -1; 
+            }
+            // file +8*byte+filesrc 
+            byte[] src;
+            int  result = -1;
+            FileStream fs = new FileStream(filepath, FileMode.Open);
+            long len = fs.Length;
+            src = new byte[fs.Length];
+            string filehead = "file";
+            string filename = getfilename(filepath); 
+            int  filenamelen = filename.Length; 
+            fs.Read(src, 0, src.Length);
+            fs.Close();
+
+            clientSocket.Send(Encoding.UTF8.GetBytes(filehead));
+            clientSocket.Send(Encoding.UTF8.GetBytes(filenamelen.ToString()));
+            clientSocket.Send(Encoding.UTF8.GetBytes(filename));
+            clientSocket.Send(Encoding.UTF8.GetBytes(len.ToString())); 
+            clientSocket.Send(src);
+            result = 0; 
+            return result; 
+        }
+
+        private string getfilename(string filepath)
+        {
+            string result = null;
+            string[] tt = null; 
+            if(filepath.Contains("/"))
+                 tt = filepath.Split('/');
+            if (filepath.Contains("\\"))
+                tt = filepath.Split('\\');
+
+            result = tt[tt.Length-1]; 
+            return result; 
+        }
+
+        public int ConnectServer(string IPANDPORTNAME)
+        {
+            byte[] buff = new byte[256]; 
+            string[] IPPORT = IPANDPORTNAME.Split(' '); 
+            int result =0 ;
+            IPAddress ip = IPAddress.Parse(IPPORT[0]);
+            int PORT = Int32.Parse(IPPORT[1]); 
+            clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            try
+            {
+                clientSocket.Connect(new IPEndPoint(ip ,PORT ));
+                clientSocket.Send(Encoding.UTF8.GetBytes(  IPPORT[2]));
+                Thread.Sleep(1000);
+                clientSocket.Send(Encoding.UTF8.GetBytes(IPPORT[3])) ;
+                clientSocket.Receive(buff);
+                if(buff[0] ==0x09 )
+                {
+                    clientSocket.Close();
+                    return result;  
+                } 
+                
+                result = 1; 
+            }
+            catch
+            {
+                return  result;
+            }
+            return result; 
+        }
+
+        public string SendIns(string tmp)
+        {
+            if (clientSocket == null)
+                return null; 
+            byte[] buff = new byte[1024]; 
+            string send = "system" + tmp;
+            clientSocket.Send(Encoding.UTF8.GetBytes(send));
+            Thread.Sleep(2000); 
+            clientSocket.Receive(buff) ;
+            return Encoding.UTF8.GetString(buff);
+        }
 
         public void stopserver()
         {

@@ -123,6 +123,7 @@
     <Compile Include="Weather\Myweather.xaml.cs">
       <DependentUpon>Myweather.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Works\ApkWork.cs" />
     <Compile Include="Works\Aworks.cs" />
     <Compile Include="Works\DexWorks.cs" />
     <Compile Include="Works\Elfworks.cs" />
